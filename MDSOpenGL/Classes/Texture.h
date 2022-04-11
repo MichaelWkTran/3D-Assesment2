@@ -12,10 +12,10 @@ public:
 	GLuint m_GLuUnit;
 
 	CTexture(const char* _pImage, const char* _pType, GLuint _GLuSlot, GLenum _GLeFormat, GLenum _GLePixelType);
+	~CTexture();
 
-	void TextureUnit(CShader& _Shader, const char* _pUniform, GLuint _GLuUnit);
+	GLuint GetTextureUnit();
 	void Bind();
 	void Unbind();
-	void Delete();
 };
 

@@ -47,14 +47,27 @@ CShader::CShader(const char* _pVertexFile, const char* _pFragmentFile)
 	glDeleteShader(GLuFragmentShader);
 }
 
+CShader::~CShader()
+{
+	glDeleteProgram(m_GLuID);
+}
+
 void CShader::Activate()
 {
+	GLint GluCurrentProgram;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &GluCurrentProgram);
+	if (GluCurrentProgram == m_GLuID) return void();
+
 	glUseProgram(m_GLuID);
 }
 
-void CShader::Delete()
+void CShader::Deactivate()
 {
-	glDeleteProgram(m_GLuID);
+	GLint GluCurrentProgram;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &GluCurrentProgram);
+	if (GluCurrentProgram == 0) return void();
+
+	glUseProgram(0);
 }
 
 GLuint CShader::GetID()

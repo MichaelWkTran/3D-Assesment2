@@ -132,11 +132,11 @@ void CCamera::Inputs(GLFWwindow* _Window)
 	{
 		m_v3Position += m_fSpeed * glm::normalize(glm::cross(m_v3Orientation, m_v3Up));
 	}
-	if (glfwGetKey(_Window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(_Window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
 		m_v3Position += m_fSpeed * m_v3Up;
 	}
-	if (glfwGetKey(_Window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	if (glfwGetKey(_Window, GLFW_KEY_E) == GLFW_PRESS)
 	{
 		m_v3Position += m_fSpeed * -m_v3Up;
 	}
@@ -148,7 +148,6 @@ void CCamera::Inputs(GLFWwindow* _Window)
 	{
 		m_fSpeed = 0.1f * 0.01f;
 	}
-
 
 	// Handles mouse inputs
 	if (glfwGetMouseButton(_Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)

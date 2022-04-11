@@ -6,12 +6,15 @@
 
 class CElementBuffer
 {
-public:
+private:
 	GLuint m_GLuID;
+	
+public:
 	CElementBuffer(std::vector<GLuint>& _GLuIndicies);
+	~CElementBuffer();
 
+	const GLuint GetID();
 	void Bind();
 	void Unbind();
-	void Delete();
 };
 

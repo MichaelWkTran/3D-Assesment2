@@ -14,11 +14,14 @@ struct stVertex
 
 class CVertexBuffer
 {
-public:
+private:
 	GLuint m_GLuID;
-	CVertexBuffer(std::vector<stVertex>& _stVerticies);
 
+public:
+	CVertexBuffer(std::vector<stVertex>& _vVerticies);
+	~CVertexBuffer();
+
+	const GLuint GetID();
 	void Bind();
 	void Unbind();
-	void Delete();
 };

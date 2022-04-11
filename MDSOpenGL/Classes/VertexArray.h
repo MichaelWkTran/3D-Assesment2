@@ -8,18 +8,17 @@ class CVertexArray
 public:
 	GLuint m_GLuID;
 	CVertexArray();
+	~CVertexArray();
 
 	void LinkAttribute
 	(
-		CVertexBuffer& VertexBuffer, 
-		GLuint GluLayout, 
-		GLuint _GLuNumComponents, 
-		GLenum _GLeType, 
-		GLsizeiptr _Stride, 
+		GLuint GluLayout,
+		GLuint _GLuNumComponents,
+		GLenum _GLeType,
+		GLsizeiptr _Stride,
 		void* _Offset
 	);
 	void Bind();
 	void Unbind();
-	void Delete();
 };
 

@@ -24,11 +24,14 @@ CTexture::CTexture(const char* _pImage, const char* _pType, GLuint _GLuSlot, GLe
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void CTexture::TextureUnit(CShader& _Shader, const char* _pUniform, GLuint _GLuUnit)
+CTexture::~CTexture()
 {
-	GLuint texUni = glGetUniformLocation(_Shader.GetID(), _pUniform);
-	_Shader.Activate();
-	glUniform1i(texUni, _GLuUnit);
+	glDeleteTextures(1, &m_GLuID);
+}
+
+GLuint CTexture::GetTextureUnit()
+{
+	return m_GLuUnit;
 }
 
 void CTexture::Bind()
@@ -40,9 +43,4 @@ void CTexture::Bind()
 void CTexture::Unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void CTexture::Delete()
-{
-	glDeleteTextures(1, &m_GLuID);
 }

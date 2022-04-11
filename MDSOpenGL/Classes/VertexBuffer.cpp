@@ -1,10 +1,23 @@
 #include "VertexBuffer.h"
 
-CVertexBuffer::CVertexBuffer(std::vector<stVertex>& _stVerticies)
+CVertexBuffer::CVertexBuffer(std::vector<stVertex>& _vVerticies)
 {
-	glGenBuffers(1, &m_GLuID);
-    glBindBuffer(GL_ARRAY_BUFFER, m_GLuID);
-    glBufferData(GL_ARRAY_BUFFER, _stVerticies.size() * sizeof(stVertex), _stVerticies.data(), GL_STATIC_DRAW);
+    glGenBuffers(1, &m_GLuID);
+    Bind();
+    glBufferData(GL_ARRAY_BUFFER, _vVerticies.size() * sizeof(stVertex), _vVerticies.data(), GL_STATIC_DRAW);
+    Unbind();
+
+    _vVerticies = std::vector<stVertex>();
+}
+
+CVertexBuffer::~CVertexBuffer()
+{
+    glDeleteBuffers(1, &m_GLuID);
+}
+
+const GLuint CVertexBuffer::GetID()
+{
+    return m_GLuID;
 }
 
 void CVertexBuffer::Bind()
@@ -15,9 +28,4 @@ void CVertexBuffer::Bind()
 void CVertexBuffer::Unbind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void CVertexBuffer::Delete()
-{
-    glDeleteBuffers(1, &m_GLuID);
 }

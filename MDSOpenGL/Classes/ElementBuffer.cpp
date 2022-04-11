@@ -3,8 +3,19 @@
 CElementBuffer::CElementBuffer(std::vector<GLuint>& _GLuIndicies)
 {
     glGenBuffers(1, &m_GLuID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GLuID);
+    Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, _GLuIndicies.size() * sizeof(GLuint), _GLuIndicies.data(), GL_STATIC_DRAW);
+    Unbind();
+}
+
+CElementBuffer::~CElementBuffer()
+{
+    glDeleteBuffers(1, &m_GLuID);
+}
+
+const GLuint CElementBuffer::GetID()
+{
+    return m_GLuID;
 }
 
 void CElementBuffer::Bind()
@@ -15,9 +26,4 @@ void CElementBuffer::Bind()
 void CElementBuffer::Unbind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void CElementBuffer::Delete()
-{
-    glDeleteBuffers(1, &m_GLuID);
 }

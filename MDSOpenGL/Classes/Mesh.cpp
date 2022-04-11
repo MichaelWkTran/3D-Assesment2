@@ -5,14 +5,15 @@ void CMesh::UpdateVertexArray()
 	if (!m_bUpdateVertexArray) return void();
 	m_bUpdateVertexArray = false;
 
-	m_VertexArray.Bind();
 	CVertexBuffer VertexBuffer(m_vVerticies);
 	CElementBuffer ElementBuffer(m_vIndicies);
 
-	m_VertexArray.LinkAttribute(VertexBuffer, 0 /*m_v3CurrentPosition*/, 3, GL_FLOAT, sizeof(stVertex), (void*)0);
-	m_VertexArray.LinkAttribute(VertexBuffer, 1 /*m_v3Normal*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(3 * sizeof(float)));
-	m_VertexArray.LinkAttribute(VertexBuffer, 2 /*m_v3Color*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(6 * sizeof(float)));
-	m_VertexArray.LinkAttribute(VertexBuffer, 3 /*m_v2TextureCoord*/, 2, GL_FLOAT, sizeof(stVertex), (void*)(9 * sizeof(float)));
+	m_VertexArray.Bind(); VertexBuffer.Bind(); ElementBuffer.Bind();
+
+	m_VertexArray.LinkAttribute(0 /*m_v3CurrentPosition*/, 3, GL_FLOAT, sizeof(stVertex), (void*)0);
+	m_VertexArray.LinkAttribute(1 /*m_v3Normal*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(3 * sizeof(float)));
+	m_VertexArray.LinkAttribute(2 /*m_v3Color*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(6 * sizeof(float)));
+	m_VertexArray.LinkAttribute(3 /*m_v2TextureCoord*/, 2, GL_FLOAT, sizeof(stVertex), (void*)(9 * sizeof(float)));
 
 	m_VertexArray.Unbind(); VertexBuffer.Unbind(); ElementBuffer.Unbind();
 }
@@ -51,6 +52,8 @@ void CMesh::SetIndicies(std::vector<GLuint>& _vIndicies)
 
 void CMesh::Draw(CCamera& _Camera)
 {
+	if (m_pShader == nullptr) return void();
+
 	UpdateVertexArray();
 
 	m_pShader->Activate();
@@ -66,7 +69,8 @@ void CMesh::Draw(CCamera& _Camera)
 		if (strType == "Diffuse") { strNum = std::to_string(uNumDiffuse++); }
 		else if (strType == "Specular") { strNum = std::to_string(uNumSpecular++); }
 
-		m_vTextures[i].TextureUnit(*m_pShader, ("uni_samp2D" + strType + '[' + strNum + ']').c_str(), i);
+
+		glUniform1i(glGetUniformLocation(m_pShader->GetID(), ("uni_samp2D" + strType + '[' + strNum + ']').c_str()), m_vTextures[i].GetTextureUnit());
 		m_vTextures[i].Bind();
 	}
 
@@ -74,4 +78,5 @@ void CMesh::Draw(CCamera& _Camera)
 	glUniformMatrix4fv(glGetUniformLocation(m_pShader->GetID(), "uni_mat4CameraMatrix"), 1, GL_FALSE, glm::value_ptr(_Camera.GetCameraMatrix()));
 
 	glDrawElements(GL_TRIANGLES, m_vIndicies.size(), GL_UNSIGNED_INT, 0);
+	m_VertexArray.Unbind();
 }

@@ -61,6 +61,8 @@ GLuint GLuLightIndices[] =
 };
 
 unsigned int uViewPortW = 800, uViewPortH = 800;
+float fPreviousTimestep = (float)glfwGetTime();
+float fDeltatime = 0;
 
 int main()
 {
@@ -88,7 +90,8 @@ int main()
         glfwTerminate();
         return -1;
     }
-
+    
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
     //Setup Window Viewport
@@ -96,17 +99,18 @@ int main()
     glfwSetFramebufferSizeCallback(pWindow, FramebufferSizeCallback);
 
     //Set up Textures
+    GLuint m_GluTextureSlot = 0;
     CTexture Textures[]
     {
-        CTexture("Textures/Planks.png", "Diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-        CTexture("Textures/PlanksSpecular.png", "Specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+        CTexture("Textures/Planks.png", "Diffuse", m_GluTextureSlot++, GL_RGBA, GL_UNSIGNED_BYTE),
+        CTexture("Textures/PlanksSpecular.png", "Specular", m_GluTextureSlot++, GL_RED, GL_UNSIGNED_BYTE)
     };
     
     //Set up Light Shader
     CShader ShaderLight("Shaders/Light.vert", "Shaders/Light.frag"); ShaderLight.Activate();
     std::vector<stVertex> vLightVerticies(stLightVertices, stLightVertices + sizeof(stLightVertices) / sizeof(stVertex));
     std::vector<GLuint> vLightIndicies(GLuLightIndices, GLuLightIndices + sizeof(GLuLightIndices) / sizeof(GLuint));
-    std::vector<CTexture> vLightTextures(Textures, Textures + sizeof(Textures) / sizeof(CTexture));
+    std::vector<CTexture> vLightTextures;
     CMesh Light(vLightVerticies, vLightIndicies, vLightTextures, &ShaderLight);
 
     glm::vec4 v4LightColour(1.0f, 1.0f, 1.0f, 1.0f);
@@ -117,23 +121,21 @@ int main()
     glUniformMatrix4fv(glGetUniformLocation(ShaderLight.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4LightModel));
     glUniform4f(glGetUniformLocation(ShaderLight.GetID(), "uni_v4LightColor"), v4LightColour.x, v4LightColour.y, v4LightColour.z, v4LightColour.w);
     
-    //Set up Floor Shader
-    CShader ShaderFloor("Shaders/Default.vert", "Shaders/Default.frag"); ShaderFloor.Activate();
+    //Set up Cube Shader
+    CShader ShaderCube("Shaders/Default.vert", "Shaders/Default.frag"); ShaderCube.Activate();
     std::vector<stVertex> vVerticies(stVertices, stVertices + sizeof(stVertices) / sizeof(stVertex));
     std::vector<GLuint> vIndicies(GLuIndices, GLuIndices + sizeof(GLuIndices) / sizeof(GLuint));
     std::vector<CTexture> vTextures(Textures, Textures + sizeof(Textures) / sizeof(CTexture));
-    CMesh Floor(vVerticies, vIndicies, vTextures, &ShaderFloor);
+    CMesh Cube(vVerticies, vIndicies, vTextures, &ShaderCube);
     
-    glm::mat4 mat4FloorModel = glm::mat4(1.0f);
-    mat4FloorModel = glm::translate(mat4FloorModel, glm::vec3(0.0f, 0.0f, 0.0f));
-    mat4FloorModel = glm::rotate(mat4FloorModel, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        
-    glUniformMatrix4fv(glGetUniformLocation(ShaderFloor.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4FloorModel));
-    glUniform4f(glGetUniformLocation(ShaderFloor.GetID(), "uni_v4LightColor"), v4LightColour.x, v4LightColour.y, v4LightColour.z, v4LightColour.w);
-    glUniform3f(glGetUniformLocation(ShaderFloor.GetID(), "uni_v3LightPosition"), v3LightPos.x, v3LightPos.y, v3LightPos.z);
+    float mat4CubeRotation = 0;
+    glm::mat4 mat4CubePosition  = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.25f));
+    glm::mat4 mat4CubePosition2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));
+    glm::mat4 mat4CubeModel = mat4CubePosition;
 
-    //Set up Textures
-    glEnable(GL_DEPTH_TEST);
+    glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+    glUniform4f(glGetUniformLocation(ShaderCube.GetID(), "uni_v4LightColor"), v4LightColour.x, v4LightColour.y, v4LightColour.z, v4LightColour.w);
+    glUniform3f(glGetUniformLocation(ShaderCube.GetID(), "uni_v3LightPosition"), v3LightPos.x, v3LightPos.y, v3LightPos.z);
 
     //Set up camera
     CCamera Camera(&uViewPortW, &uViewPortH, true, glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f));
@@ -141,6 +143,11 @@ int main()
     //Render Loop
     while (!glfwWindowShouldClose(pWindow))
     {
+        //Calculate Deltatime
+        float fCurrentTimestep = (float)glfwGetTime();
+        fDeltatime = fCurrentTimestep - fPreviousTimestep;
+        fPreviousTimestep = fCurrentTimestep;
+
         //Input
         if (glfwGetKey(pWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         {
@@ -155,7 +162,15 @@ int main()
         Camera.Inputs(pWindow);
         Camera.Update();
 
-        Floor.Draw(Camera);
+        ShaderCube.Activate();
+        mat4CubeModel = glm::rotate(mat4CubePosition, glm::radians(mat4CubeRotation += fDeltatime * 45.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(mat4CubePosition);
+        glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+        Cube.Draw(Camera);
+        
+        mat4CubeModel = glm::rotate(mat4CubePosition2, glm::radians(mat4CubeRotation += fDeltatime * 45.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::inverse(mat4CubePosition2);
+        glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+        Cube.Draw(Camera);
+
         Light.Draw(Camera);
 
         //Check and call events and swap the buffers
@@ -163,8 +178,6 @@ int main()
         glfwPollEvents();
     }
 
-    ShaderFloor.Delete();
-    ShaderLight.Delete();
     glfwDestroyWindow(pWindow);
     glfwTerminate();
     return 0;
