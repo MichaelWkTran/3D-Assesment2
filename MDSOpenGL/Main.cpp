@@ -133,7 +133,8 @@ int main()
     glm::mat4 mat4CubePosition2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));
     glm::mat4 mat4CubeModel = mat4CubePosition;
 
-    glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+    glm::vec3 v3PlayerPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+
     glUniform4f(glGetUniformLocation(ShaderCube.GetID(), "uni_v4LightColor"), v4LightColour.x, v4LightColour.y, v4LightColour.z, v4LightColour.w);
     glUniform3f(glGetUniformLocation(ShaderCube.GetID(), "uni_v3LightPosition"), v3LightPos.x, v3LightPos.y, v3LightPos.z);
 
@@ -158,9 +159,36 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Set up Camera
-        Camera.Inputs(pWindow);
+        //Update Inputs
         Camera.Update();
+        {
+            float m_fSpeed = 1.0f * fDeltatime;
+
+            if (glfwGetKey(pWindow, GLFW_KEY_W) == GLFW_PRESS)
+            {
+                v3PlayerPosition += -glm::vec3(0.0f, 0.0f, m_fSpeed);
+            }
+            if (glfwGetKey(pWindow, GLFW_KEY_S) == GLFW_PRESS)
+            {
+                v3PlayerPosition += glm::vec3(0.0f,0.0f,m_fSpeed);
+            }
+            if (glfwGetKey(pWindow, GLFW_KEY_A) == GLFW_PRESS)
+            {
+                v3PlayerPosition += -glm::vec3(m_fSpeed,0.0f,0.0f);
+            }
+            if (glfwGetKey(pWindow, GLFW_KEY_D) == GLFW_PRESS)
+            {
+                v3PlayerPosition += glm::vec3(m_fSpeed,0.0f,0.0f);
+            }
+            if (glfwGetKey(pWindow, GLFW_KEY_Q) == GLFW_PRESS)
+            {
+                v3PlayerPosition += glm::vec3(0.0f,m_fSpeed,0.0f);
+            }
+            if (glfwGetKey(pWindow, GLFW_KEY_E) == GLFW_PRESS)
+            {
+                v3PlayerPosition += -glm::vec3(0.0f,m_fSpeed,0.0f);
+            }
+        }
 
         ShaderCube.Activate();
         mat4CubeModel = glm::rotate(mat4CubePosition, glm::radians(mat4CubeRotation += fDeltatime * 45.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(mat4CubePosition);
@@ -168,6 +196,10 @@ int main()
         Cube.Draw(Camera);
         
         mat4CubeModel = glm::rotate(mat4CubePosition2, glm::radians(mat4CubeRotation += fDeltatime * 45.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::inverse(mat4CubePosition2);
+        glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+        Cube.Draw(Camera);
+
+        mat4CubeModel = glm::translate(glm::mat4(1.0f), v3PlayerPosition);
         glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
         Cube.Draw(Camera);
 

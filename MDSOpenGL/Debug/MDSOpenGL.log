@@ -1,7 +1,2 @@
-﻿  Mesh.cpp
-  Model.cpp
-  VertexArray.cpp
-  VertexBuffer.cpp
-  Main.cpp
-  Generating Code...
+﻿  Main.cpp
   MDSOpenGL.vcxproj -> D:\Michael\Other Stuff\C++\MDSOpenGL - Copy\Debug\MDSOpenGL.exe
