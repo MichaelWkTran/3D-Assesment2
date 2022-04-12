@@ -31,4 +31,8 @@
 
 # Folders
 /ipch/
+/Debug/
+/Release/
+
 *.ipch
+*.filters

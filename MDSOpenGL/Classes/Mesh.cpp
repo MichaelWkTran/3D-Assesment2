@@ -12,18 +12,18 @@ void CMesh::UpdateVertexArray()
 
 	m_VertexArray.LinkAttribute(0 /*m_v3CurrentPosition*/, 3, GL_FLOAT, sizeof(stVertex), (void*)0);
 	m_VertexArray.LinkAttribute(1 /*m_v3Normal*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(3 * sizeof(float)));
-	m_VertexArray.LinkAttribute(2 /*m_v3Color*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(6 * sizeof(float)));
-	m_VertexArray.LinkAttribute(3 /*m_v2TextureCoord*/, 2, GL_FLOAT, sizeof(stVertex), (void*)(9 * sizeof(float)));
+	m_VertexArray.LinkAttribute(2 /*m_v2TextureCoord*/, 2, GL_FLOAT, sizeof(stVertex), (void*)(6 * sizeof(float)));
+	m_VertexArray.LinkAttribute(3 /*m_v3Color*/, 3, GL_FLOAT, sizeof(stVertex), (void*)(8 * sizeof(float)));
 
 	m_VertexArray.Unbind(); VertexBuffer.Unbind(); ElementBuffer.Unbind();
 }
 
-CMesh::CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector<CTexture>& _vTextures, CShader* _pShader)
+CMesh::CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector<CTexture>& _vTextures, CShader& _Shader)
 {
 	m_vVerticies = _vVerticies;
 	m_vIndicies = _vIndicies;
 	m_vTextures = _vTextures;
-	m_pShader = _pShader;
+	m_pShader = &_Shader;
 
 	m_bUpdateVertexArray = true;
 }

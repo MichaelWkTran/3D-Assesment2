@@ -6,8 +6,6 @@ CVertexBuffer::CVertexBuffer(std::vector<stVertex>& _vVerticies)
     Bind();
     glBufferData(GL_ARRAY_BUFFER, _vVerticies.size() * sizeof(stVertex), _vVerticies.data(), GL_STATIC_DRAW);
     Unbind();
-
-    _vVerticies = std::vector<stVertex>();
 }
 
 CVertexBuffer::~CVertexBuffer()

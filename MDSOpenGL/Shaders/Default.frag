@@ -4,8 +4,8 @@ out vec4 FragColor;
 
 in vec3 m_v3CurrentPosition;
 in vec3 m_v3Normal;
-in vec3 m_v3Color;
 in vec2 m_v2TextureCoord;
+in vec3 m_v3Color;
 
 #define DIFFUSE_NUMBER 1
 uniform sampler2D uni_samp2DDiffuse[DIFFUSE_NUMBER];

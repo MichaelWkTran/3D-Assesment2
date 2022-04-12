@@ -8,8 +8,16 @@ struct stVertex
 {
 	glm::vec3 m_v3Position;
 	glm::vec3 m_v3Normal;
-	glm::vec3 m_v3Colour;
 	glm::vec2 m_v3TextureUV;
+	glm::vec3 m_v3Colour = glm::vec3(1, 1, 1);
+};
+
+struct stTriangle
+{
+	GLuint m_Indicies[3];
+	glm::vec3 m_v3Normals[3];
+	glm::vec2 m_v3TextureUV[3];
+	glm::vec3 m_v3Colours[3] = {glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1)};
 };
 
 class CVertexBuffer

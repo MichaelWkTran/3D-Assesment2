@@ -8,19 +8,20 @@
 
 class CMesh
 {
-private:
+protected:
 	CVertexArray m_VertexArray;
 	std::vector <stVertex> m_vVerticies;
 	std::vector <GLuint> m_vIndicies;
 	
+	CMesh() { m_pShader = nullptr; m_bUpdateVertexArray = true; };
 	bool m_bUpdateVertexArray;
-	void UpdateVertexArray();
+	virtual void UpdateVertexArray();
 
 public:
 	std::vector <CTexture> m_vTextures;
 	CShader* m_pShader;
 
-	CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector <CTexture>& _Textures, CShader* _pShader);
+	CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector <CTexture>& _Textures, CShader& _Shader);
 
 	std::vector <stVertex> GetVerticies() const;
 	void SetVerticies(std::vector<stVertex>& _vVerticies);
@@ -28,4 +29,16 @@ public:
 	void SetIndicies(std::vector<GLuint>& _vIndicies);
 
 	void Draw(CCamera& _Camera);
+};
+
+class CMeshTris : public CMesh
+{
+protected:
+	std::vector <glm::vec3> m_vVertexPositions;
+	std::vector <stTriangle> m_vTriangles;
+
+	virtual void UpdateVertexArray();
+
+public:
+	CMeshTris(std::vector<glm::vec3>& _vVertexPositions, std::vector<stTriangle>& _vTriangles, std::vector <CTexture>& _vTextures, CShader& _Shader);
 };

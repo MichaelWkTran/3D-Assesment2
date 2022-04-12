@@ -2,20 +2,20 @@
 
 void FramebufferSizeCallback(GLFWwindow* _pWindow, int _iWidth, int _iHeight);
 
-stVertex stVertices[] =
+std::vector<stVertex> vVertices =
 {
-    //Coordinates                                      /**/    Normals                            /**/    Colours                         /**/    Texture Cordinate
-    stVertex{glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f,    /**/    glm::vec3(1.0f,  -1.0f, -1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(0.0f, 0.0f)},
-    stVertex{glm::vec3(-1.0f, -1.0f, -1.0f) * 0.1f,    /**/    glm::vec3(-1.0f, -1.0f, -1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(1.0f, 0.0f)},
-    stVertex{glm::vec3(1.0f,  -1.0f,  1.0f) * 0.1f,    /**/    glm::vec3(1.0f,  -1.0f,  1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(0.0f, 1.0f)},
-    stVertex{glm::vec3(-1.0f, -1.0f,  1.0f) * 0.1f,    /**/    glm::vec3(-1.0f, -1.0f,  1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(1.0f, 0.0f)},
-    stVertex{glm::vec3(1.0f,   1.0f, -1.0f) * 0.1f,    /**/    glm::vec3(1.0f,   1.0f, -1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(1.0f, 1.0f)},
-    stVertex{glm::vec3(-1.0f,  1.0f, -1.0f) * 0.1f,    /**/    glm::vec3(-1.0f,  1.0f, -1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(1.0f, 0.0f)},
-    stVertex{glm::vec3(1.0f,   1.0f,  1.0f) * 0.1f,    /**/    glm::vec3(1.0f,   1.0f,  1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(1.0f, 1.0f)},
-    stVertex{glm::vec3(-1.0f,  1.0f,  1.0f) * 0.1f,    /**/    glm::vec3(-1.0f,  1.0f,  1.0f),    /**/    glm::vec3(1.0f, 1.0f, 1.0f),    /**/    glm::vec2(1.0f, 0.0f)}
+    //Coordinates                                   Normals                         Texture Cordinate
+    stVertex{glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f, glm::vec3(1.0f,  -1.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
+    stVertex{glm::vec3(-1.0f, -1.0f, -1.0f) * 0.1f, glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
+    stVertex{glm::vec3(1.0f,  -1.0f,  1.0f) * 0.1f, glm::vec3(1.0f,  -1.0f,  1.0f), glm::vec2(0.0f, 1.0f)},
+    stVertex{glm::vec3(-1.0f, -1.0f,  1.0f) * 0.1f, glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec2(1.0f, 0.0f)},
+    stVertex{glm::vec3(1.0f,   1.0f, -1.0f) * 0.1f, glm::vec3(1.0f,   1.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
+    stVertex{glm::vec3(-1.0f,  1.0f, -1.0f) * 0.1f, glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
+    stVertex{glm::vec3(1.0f,   1.0f,  1.0f) * 0.1f, glm::vec3(1.0f,   1.0f,  1.0f), glm::vec2(1.0f, 1.0f)},
+    stVertex{glm::vec3(-1.0f,  1.0f,  1.0f) * 0.1f, glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec2(1.0f, 0.0f)}
 };
 
-GLuint GLuIndices[]
+std::vector<GLuint> vIndices = 
 {
     0, 2, 1, //Top
     1, 2, 3,
@@ -25,10 +25,39 @@ GLuint GLuIndices[]
     2, 6, 7,
     4, 1, 5, //Back
     4, 0, 1,
-    7, 5, 3, //Right Side
+    7, 5, 3, //Right
     3, 5, 1,
-    4, 6, 0, //Left Side
+    4, 6, 0, //Left
     0, 6, 2
+};
+
+std::vector<glm::vec3> vVertexPositions =
+{
+    glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f,
+    glm::vec3(-1.0f, -1.0f, -1.0f) * 0.1f,
+    glm::vec3(1.0f,  -1.0f,  1.0f) * 0.1f,
+    glm::vec3(-1.0f, -1.0f,  1.0f) * 0.1f,
+    glm::vec3(1.0f,   1.0f, -1.0f) * 0.1f,
+    glm::vec3(-1.0f,  1.0f, -1.0f) * 0.1f,
+    glm::vec3(1.0f,   1.0f,  1.0f) * 0.1f,
+    glm::vec3(-1.0f,  1.0f,  1.0f) * 0.1f
+};
+
+std::vector<stTriangle> vTriangles =
+{
+    //Indices             Normals                                                                                           Texture Cordinate
+    stTriangle{{0, 2, 1}, {glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Top
+    stTriangle{{1, 2, 3}, {glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
+    stTriangle{{6, 4, 7}, {glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Bottom
+    stTriangle{{7, 4, 5}, {glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
+    stTriangle{{2, 7, 3}, {glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Front
+    stTriangle{{2, 6, 7}, {glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
+    stTriangle{{4, 1, 5}, {glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Back
+    stTriangle{{4, 0, 1}, {glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
+    stTriangle{{7, 5, 3}, {glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Right
+    stTriangle{{3, 5, 1}, {glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
+    stTriangle{{4, 6, 0}, {glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Left
+    stTriangle{{0, 6, 2}, {glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}
 };
 
 stVertex stLightVertices[] =
@@ -111,7 +140,7 @@ int main()
     std::vector<stVertex> vLightVerticies(stLightVertices, stLightVertices + sizeof(stLightVertices) / sizeof(stVertex));
     std::vector<GLuint> vLightIndicies(GLuLightIndices, GLuLightIndices + sizeof(GLuLightIndices) / sizeof(GLuint));
     std::vector<CTexture> vLightTextures;
-    CMesh Light(vLightVerticies, vLightIndicies, vLightTextures, &ShaderLight);
+    CMesh Light(vLightVerticies, vLightIndicies, vLightTextures, ShaderLight);
 
     glm::vec4 v4LightColour(1.0f, 1.0f, 1.0f, 1.0f);
     glm::vec3 v3LightPos = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -123,11 +152,10 @@ int main()
     
     //Set up Cube Shader
     CShader ShaderCube("Shaders/Default.vert", "Shaders/Default.frag"); ShaderCube.Activate();
-    std::vector<stVertex> vVerticies(stVertices, stVertices + sizeof(stVertices) / sizeof(stVertex));
-    std::vector<GLuint> vIndicies(GLuIndices, GLuIndices + sizeof(GLuIndices) / sizeof(GLuint));
     std::vector<CTexture> vTextures(Textures, Textures + sizeof(Textures) / sizeof(CTexture));
-    CMesh Cube(vVerticies, vIndicies, vTextures, &ShaderCube);
-    
+    //CMesh Cube(vVertices, vIndices, vTextures, ShaderCube);
+    CMeshTris Cube(vVertexPositions, vTriangles, vTextures, ShaderCube);
+
     float mat4CubeRotation = 0;
     glm::mat4 mat4CubePosition  = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.25f));
     glm::mat4 mat4CubePosition2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));

@@ -2,8 +2,8 @@
 
 layout (location = 0) in vec3 in_v3Position;
 layout (location = 1) in vec3 in_v3Normal;
-layout (location = 2) in vec3 in_v3Color;
-layout (location = 3) in vec2 in_v2TextureCoord;
+layout (location = 2) in vec2 in_v2TextureCoord;
+layout (location = 3) in vec3 in_v3Color;
 
 out vec3 m_v3CurrentPosition;
 out vec3 m_v3Normal;
@@ -17,8 +17,8 @@ void main()
 {
 	m_v3CurrentPosition = vec3(uni_mat4Model * vec4(in_v3Position, 1.0f));
 	m_v3Normal = in_v3Normal;
-	m_v3Color = in_v3Color;
 	m_v2TextureCoord = in_v2TextureCoord;
+	m_v3Color = in_v3Color;
 
 	gl_Position = uni_mat4CameraMatrix * vec4(m_v3CurrentPosition, 1.0);
 }

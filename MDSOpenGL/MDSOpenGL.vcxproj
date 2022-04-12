@@ -154,6 +154,7 @@
     <ClCompile Include="Classes\Camera.cpp" />
     <ClCompile Include="Classes\ElementBuffer.cpp" />
     <ClCompile Include="Classes\Mesh.cpp" />
+    <ClCompile Include="Classes\MeshTris.cpp" />
     <ClCompile Include="Classes\Model.cpp" />
     <ClCompile Include="Classes\Shader.cpp" />
     <ClCompile Include="Classes\Texture.cpp" />
