@@ -2,35 +2,6 @@
 
 void FramebufferSizeCallback(GLFWwindow* _pWindow, int _iWidth, int _iHeight);
 
-std::vector<stVertex> vVertices =
-{
-    //Coordinates                                   Normals                         Texture Cordinate
-    stVertex{glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f, glm::vec3(1.0f,  -1.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-    stVertex{glm::vec3(-1.0f, -1.0f, -1.0f) * 0.1f, glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
-    stVertex{glm::vec3(1.0f,  -1.0f,  1.0f) * 0.1f, glm::vec3(1.0f,  -1.0f,  1.0f), glm::vec2(0.0f, 1.0f)},
-    stVertex{glm::vec3(-1.0f, -1.0f,  1.0f) * 0.1f, glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec2(1.0f, 0.0f)},
-    stVertex{glm::vec3(1.0f,   1.0f, -1.0f) * 0.1f, glm::vec3(1.0f,   1.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
-    stVertex{glm::vec3(-1.0f,  1.0f, -1.0f) * 0.1f, glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
-    stVertex{glm::vec3(1.0f,   1.0f,  1.0f) * 0.1f, glm::vec3(1.0f,   1.0f,  1.0f), glm::vec2(1.0f, 1.0f)},
-    stVertex{glm::vec3(-1.0f,  1.0f,  1.0f) * 0.1f, glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec2(1.0f, 0.0f)}
-};
-
-std::vector<GLuint> vIndices = 
-{
-    0, 2, 1, //Top
-    1, 2, 3,
-    6, 4, 7, //Bottom
-    7, 4, 5,
-    2, 7, 3, //Front
-    2, 6, 7,
-    4, 1, 5, //Back
-    4, 0, 1,
-    7, 5, 3, //Right
-    3, 5, 1,
-    4, 6, 0, //Left
-    0, 6, 2
-};
-
 std::vector<glm::vec3> vVertexPositions =
 {
     glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f,
@@ -45,19 +16,19 @@ std::vector<glm::vec3> vVertexPositions =
 
 std::vector<stTriangle> vTriangles =
 {
-    //Indices             Normals                                                                                           Texture Cordinate
-    stTriangle{{0, 2, 1}, {glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Top
-    stTriangle{{1, 2, 3}, {glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3( 0.0f,  1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
-    stTriangle{{6, 4, 7}, {glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Bottom
-    stTriangle{{7, 4, 5}, {glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3( 0.0f, -1.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
-    stTriangle{{2, 7, 3}, {glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Front
-    stTriangle{{2, 6, 7}, {glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3( 0.0f,  0.0f,  1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
-    stTriangle{{4, 1, 5}, {glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Back
-    stTriangle{{4, 0, 1}, {glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3( 0.0f,  0.0f, -1.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
-    stTriangle{{7, 5, 3}, {glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Right
-    stTriangle{{3, 5, 1}, {glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3( 1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}},
-    stTriangle{{4, 6, 0}, {glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}, //Left
-    stTriangle{{0, 6, 2}, {glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(-1.0f,  0.0f,  0.0f)}, {glm::vec2(), glm::vec2(), glm::vec2()}}
+    //Indices          Normals                                                                                  Texture Cordinate
+    stTriangle{{0,2,1},{glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,0)}}, //Top
+    stTriangle{{1,2,3},{glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f)},{glm::vec2(1,0),glm::vec2(0,1),glm::vec2(1,1)}},
+    stTriangle{{6,4,7},{glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,0)}}, //Bottom
+    stTriangle{{7,4,5},{glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f)},{glm::vec2(1,0),glm::vec2(0,1),glm::vec2(1,1)}},
+    stTriangle{{2,7,3},{glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f)},{glm::vec2(0,0),glm::vec2(1,1),glm::vec2(1,0)}}, //Front
+    stTriangle{{2,6,7},{glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,1)}},
+    stTriangle{{4,1,5},{glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f)},{glm::vec2(0,0),glm::vec2(1,1),glm::vec2(1,0)}}, //Back
+    stTriangle{{4,0,1},{glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,1)}},
+    stTriangle{{7,5,3},{glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f)},{glm::vec2(1,1),glm::vec2(1,0),glm::vec2(0,1)}}, //Right
+    stTriangle{{3,5,1},{glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f)},{glm::vec2(0,1),glm::vec2(1,0),glm::vec2(0,0)}},
+    stTriangle{{4,6,0},{glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f)},{glm::vec2(1,1),glm::vec2(1,0),glm::vec2(0,1)}}, //Left
+    stTriangle{{0,6,2},{glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f)},{glm::vec2(0,1),glm::vec2(1,0),glm::vec2(0,0)}}
 };
 
 stVertex stLightVertices[] =
@@ -188,8 +159,9 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Update Inputs
+        Camera.Inputs(pWindow);
         Camera.Update();
-        {
+        /*{
             float m_fSpeed = 1.0f * fDeltatime;
 
             if (glfwGetKey(pWindow, GLFW_KEY_W) == GLFW_PRESS)
@@ -216,7 +188,7 @@ int main()
             {
                 v3PlayerPosition += -glm::vec3(0.0f,m_fSpeed,0.0f);
             }
-        }
+        }*/
 
         ShaderCube.Activate();
         mat4CubeModel = glm::rotate(mat4CubePosition, glm::radians(mat4CubeRotation += fDeltatime * 45.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(mat4CubePosition);

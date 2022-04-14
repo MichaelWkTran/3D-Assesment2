@@ -30,6 +30,10 @@ public:
 	glm::vec3 m_v3Position;
 	glm::vec3 m_v3Orientation;
 
+	bool m_bFirstClick = true;
+	float m_fSpeed = 0.1f * 0.001f;
+	float m_fSensitivity = 100.0f;
+
 	CCamera
 	(
 		unsigned int* _pViewPortW,
@@ -43,7 +47,8 @@ public:
 	);
 
 	void Update();
-	
+	void Inputs(GLFWwindow* _Window);
+
 	//Get Set Methods
 	glm::mat4 GetViewMatrix();
 	glm::mat4 GetProjectionMatrix();
