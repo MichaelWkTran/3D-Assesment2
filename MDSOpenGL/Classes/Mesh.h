@@ -13,7 +13,6 @@ protected:
 	std::vector <stVertex> m_vVerticies;
 	std::vector <GLuint> m_vIndicies;
 	
-	CMesh() { m_pShader = nullptr; m_bUpdateVertexArray = true; };
 	bool m_bUpdateVertexArray;
 	virtual void UpdateVertexArray();
 
@@ -21,6 +20,7 @@ public:
 	std::vector <CTexture> m_vTextures;
 	CShader* m_pShader;
 
+	CMesh();
 	CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector <CTexture>& _Textures, CShader& _Shader);
 
 	std::vector <stVertex> GetVerticies() const;
@@ -29,6 +29,14 @@ public:
 	void SetIndicies(std::vector<GLuint>& _vIndicies);
 
 	void Draw(CCamera& _Camera);
+};
+
+struct stTriangle
+{
+	GLuint m_Indicies[3];
+	glm::vec3 m_v3Normals[3];
+	glm::vec2 m_v3TextureUV[3];
+	glm::vec3 m_v3Colours[3] = { glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1) };
 };
 
 class CMeshTris : public CMesh

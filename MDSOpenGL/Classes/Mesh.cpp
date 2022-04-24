@@ -18,6 +18,12 @@ void CMesh::UpdateVertexArray()
 	m_VertexArray.Unbind(); VertexBuffer.Unbind(); ElementBuffer.Unbind();
 }
 
+CMesh::CMesh()
+{
+	m_pShader = nullptr;
+	m_bUpdateVertexArray = false;
+};
+
 CMesh::CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector<CTexture>& _vTextures, CShader& _Shader)
 {
 	m_vVerticies = _vVerticies;
@@ -52,7 +58,7 @@ void CMesh::SetIndicies(std::vector<GLuint>& _vIndicies)
 
 void CMesh::Draw(CCamera& _Camera)
 {
-	if (m_pShader == nullptr) return void();
+	if (m_pShader == nullptr || m_vVerticies.empty()) return void();
 
 	UpdateVertexArray();
 

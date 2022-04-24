@@ -1,34 +1,58 @@
 #include "Classes/Mesh.h"
+#include "Classes/Player.h"
+#include "GlobalVariables.h"
 
 void FramebufferSizeCallback(GLFWwindow* _pWindow, int _iWidth, int _iHeight);
 
-std::vector<glm::vec3> vVertexPositions =
+const float fMeshSize = 0.25f;
+std::vector<stVertex> vVertices =
 {
-    glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f,
-    glm::vec3(-1.0f, -1.0f, -1.0f) * 0.1f,
-    glm::vec3(1.0f,  -1.0f,  1.0f) * 0.1f,
-    glm::vec3(-1.0f, -1.0f,  1.0f) * 0.1f,
-    glm::vec3(1.0f,   1.0f, -1.0f) * 0.1f,
-    glm::vec3(-1.0f,  1.0f, -1.0f) * 0.1f,
-    glm::vec3(1.0f,   1.0f,  1.0f) * 0.1f,
-    glm::vec3(-1.0f,  1.0f,  1.0f) * 0.1f
+    //Coordinates                                      Normals                       Texture Cordinate
+    stVertex{glm::vec3(-0.5f, 0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 1.0f, 0.0f), glm::vec2(0.0f,1.0f)}, //Front
+    stVertex{glm::vec3(-0.5f,-0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 1.0f, 0.0f), glm::vec2(0.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f,-0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 1.0f, 0.0f), glm::vec2(1.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f, 0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 1.0f, 0.0f), glm::vec2(1.0f,1.0f)},
+                                                   
+    stVertex{glm::vec3( 0.5f, 0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f,-1.0f, 0.0f), glm::vec2(0.0f,1.0f)}, //Back
+    stVertex{glm::vec3( 0.5f,-0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f,-1.0f, 0.0f), glm::vec2(0.0f,0.0f)},
+    stVertex{glm::vec3(-0.5f,-0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f,-1.0f, 0.0f), glm::vec2(1.0f,0.0f)},
+    stVertex{glm::vec3(-0.5f, 0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f,-1.0f, 0.0f), glm::vec2(1.0f,1.0f)},
+                                                   
+    stVertex{glm::vec3( 0.5f, 0.5f, 0.5f) * fMeshSize, glm::vec3( 1.0f, 0.0f, 0.0f), glm::vec2(0.0f,1.0f)}, //Right
+    stVertex{glm::vec3( 0.5f,-0.5f, 0.5f) * fMeshSize, glm::vec3( 1.0f, 0.0f, 0.0f), glm::vec2(0.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f,-0.5f,-0.5f) * fMeshSize, glm::vec3( 1.0f, 0.0f, 0.0f), glm::vec2(1.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f, 0.5f,-0.5f) * fMeshSize, glm::vec3( 1.0f, 0.0f, 0.0f), glm::vec2(1.0f,1.0f)},
+                                                   
+    stVertex{glm::vec3(-0.5f, 0.5f,-0.5f) * fMeshSize, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f,1.0f)}, //Left
+    stVertex{glm::vec3(-0.5f,-0.5f,-0.5f) * fMeshSize, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f,0.0f)},
+    stVertex{glm::vec3(-0.5f,-0.5f, 0.5f) * fMeshSize, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f,0.0f)},
+    stVertex{glm::vec3(-0.5f, 0.5f, 0.5f) * fMeshSize, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f,1.0f)},
+                                                   
+    stVertex{glm::vec3(-0.5f, 0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f, 1.0f), glm::vec2(0.0f,1.0f)}, //Front
+    stVertex{glm::vec3(-0.5f, 0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f, 1.0f), glm::vec2(0.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f, 0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f, 1.0f), glm::vec2(1.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f, 0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f, 1.0f), glm::vec2(1.0f,1.0f)},
+                                                   
+    stVertex{glm::vec3(-0.5f,-0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f,-1.0f), glm::vec2(0.0f,1.0f)}, //Bottom
+    stVertex{glm::vec3(-0.5f,-0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f,-1.0f), glm::vec2(0.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f,-0.5f,-0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f,-1.0f), glm::vec2(1.0f,0.0f)},
+    stVertex{glm::vec3( 0.5f,-0.5f, 0.5f) * fMeshSize, glm::vec3( 0.0f, 0.0f,-1.0f), glm::vec2(1.0f,1.0f)}
 };
 
-std::vector<stTriangle> vTriangles =
+std::vector<GLuint> vIndices =
 {
-    //Indices          Normals                                                                                  Texture Cordinate
-    stTriangle{{0,2,1},{glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,0)}}, //Top
-    stTriangle{{1,2,3},{glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f),glm::vec3( 0.0f, 1.0f, 0.0f)},{glm::vec2(1,0),glm::vec2(0,1),glm::vec2(1,1)}},
-    stTriangle{{6,4,7},{glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,0)}}, //Bottom
-    stTriangle{{7,4,5},{glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f),glm::vec3( 0.0f,-1.0f, 0.0f)},{glm::vec2(1,0),glm::vec2(0,1),glm::vec2(1,1)}},
-    stTriangle{{2,7,3},{glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f)},{glm::vec2(0,0),glm::vec2(1,1),glm::vec2(1,0)}}, //Front
-    stTriangle{{2,6,7},{glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f),glm::vec3( 0.0f, 0.0f, 1.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,1)}},
-    stTriangle{{4,1,5},{glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f)},{glm::vec2(0,0),glm::vec2(1,1),glm::vec2(1,0)}}, //Back
-    stTriangle{{4,0,1},{glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f),glm::vec3( 0.0f, 0.0f,-1.0f)},{glm::vec2(0,0),glm::vec2(0,1),glm::vec2(1,1)}},
-    stTriangle{{7,5,3},{glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f)},{glm::vec2(1,1),glm::vec2(1,0),glm::vec2(0,1)}}, //Right
-    stTriangle{{3,5,1},{glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f),glm::vec3( 1.0f, 0.0f, 0.0f)},{glm::vec2(0,1),glm::vec2(1,0),glm::vec2(0,0)}},
-    stTriangle{{4,6,0},{glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f)},{glm::vec2(1,1),glm::vec2(1,0),glm::vec2(0,1)}}, //Left
-    stTriangle{{0,6,2},{glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f),glm::vec3(-1.0f, 0.0f, 0.0f)},{glm::vec2(0,1),glm::vec2(1,0),glm::vec2(0,0)}}
+    0, 1, 2,
+    0, 2, 3,
+    4, 5, 6,
+    4, 6, 7,
+    8, 9, 10,
+    8, 10, 11,
+    12, 13, 14,
+    12, 14, 15,
+    16, 17, 18,
+    16, 18, 19,
+    20, 21, 22,
+    20, 22, 23
 };
 
 stVertex stLightVertices[] =
@@ -60,10 +84,6 @@ GLuint GLuLightIndices[] =
     0, 6, 2
 };
 
-unsigned int uViewPortW = 800, uViewPortH = 800;
-float fPreviousTimestep = (float)glfwGetTime();
-float fDeltatime = 0;
-
 int main()
 {
     //Initialize and Configure GLFW
@@ -93,10 +113,14 @@ int main()
     
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-
+    
     //Setup Window Viewport
     glViewport(0, 0, uViewPortW, uViewPortH);
     glfwSetFramebufferSizeCallback(pWindow, FramebufferSizeCallback);
+
+    //Program Variables
+    bool bWireframe = false;
+    bool bCursorVisible = true;
 
     //Set up Textures
     GLuint m_GluTextureSlot = 0;
@@ -124,21 +148,24 @@ int main()
     //Set up Cube Shader
     CShader ShaderCube("Shaders/Default.vert", "Shaders/Default.frag"); ShaderCube.Activate();
     std::vector<CTexture> vTextures(Textures, Textures + sizeof(Textures) / sizeof(CTexture));
-    //CMesh Cube(vVertices, vIndices, vTextures, ShaderCube);
-    CMeshTris Cube(vVertexPositions, vTriangles, vTextures, ShaderCube);
+    CMesh Cube(vVertices, vIndices, vTextures, ShaderCube);
 
     float mat4CubeRotation = 0;
     glm::mat4 mat4CubePosition  = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.25f));
     glm::mat4 mat4CubePosition2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));
     glm::mat4 mat4CubeModel = mat4CubePosition;
 
-    glm::vec3 v3PlayerPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-
     glUniform4f(glGetUniformLocation(ShaderCube.GetID(), "uni_v4LightColor"), v4LightColour.x, v4LightColour.y, v4LightColour.z, v4LightColour.w);
     glUniform3f(glGetUniformLocation(ShaderCube.GetID(), "uni_v3LightPosition"), v3LightPos.x, v3LightPos.y, v3LightPos.z);
 
+    //Setup Player
+    CPlayer m_Player;
+    m_Player.SetShader(ShaderCube);
+
     //Set up camera
     CCamera Camera(&uViewPortW, &uViewPortH, true, glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+
+    glfwSetKeyCallback(pWindow, KeyFunction);
 
     //Render Loop
     while (!glfwWindowShouldClose(pWindow))
@@ -147,48 +174,32 @@ int main()
         float fCurrentTimestep = (float)glfwGetTime();
         fDeltatime = fCurrentTimestep - fPreviousTimestep;
         fPreviousTimestep = fCurrentTimestep;
-
-        //Input
-        if (glfwGetKey(pWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        
+        if (bKeyPressed == false && iAction != GLFW_RELEASE)
         {
-            glfwSetWindowShouldClose(pWindow, true);
+            switch (iKey)
+            {
+            case GLFW_KEY_ESCAPE:
+                glfwSetWindowShouldClose(pWindow, true);
+                break;
+            case GLFW_KEY_X:
+                bWireframe = !bWireframe;
+                if (bWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                break;
+            case GLFW_KEY_C:
+                bCursorVisible = !bCursorVisible;
+                if (bCursorVisible) glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL); else glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+                break;
+            }
         }
+
+        Camera.Update();
+        m_Player.Input(pWindow);
+        UpdateKeyPressed();
 
         //Rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //Update Inputs
-        Camera.Inputs(pWindow);
-        Camera.Update();
-        /*{
-            float m_fSpeed = 1.0f * fDeltatime;
-
-            if (glfwGetKey(pWindow, GLFW_KEY_W) == GLFW_PRESS)
-            {
-                v3PlayerPosition += -glm::vec3(0.0f, 0.0f, m_fSpeed);
-            }
-            if (glfwGetKey(pWindow, GLFW_KEY_S) == GLFW_PRESS)
-            {
-                v3PlayerPosition += glm::vec3(0.0f,0.0f,m_fSpeed);
-            }
-            if (glfwGetKey(pWindow, GLFW_KEY_A) == GLFW_PRESS)
-            {
-                v3PlayerPosition += -glm::vec3(m_fSpeed,0.0f,0.0f);
-            }
-            if (glfwGetKey(pWindow, GLFW_KEY_D) == GLFW_PRESS)
-            {
-                v3PlayerPosition += glm::vec3(m_fSpeed,0.0f,0.0f);
-            }
-            if (glfwGetKey(pWindow, GLFW_KEY_Q) == GLFW_PRESS)
-            {
-                v3PlayerPosition += glm::vec3(0.0f,m_fSpeed,0.0f);
-            }
-            if (glfwGetKey(pWindow, GLFW_KEY_E) == GLFW_PRESS)
-            {
-                v3PlayerPosition += -glm::vec3(0.0f,m_fSpeed,0.0f);
-            }
-        }*/
 
         ShaderCube.Activate();
         mat4CubeModel = glm::rotate(mat4CubePosition, glm::radians(mat4CubeRotation += fDeltatime * 45.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(mat4CubePosition);
@@ -199,10 +210,8 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
         Cube.Draw(Camera);
 
-        mat4CubeModel = glm::translate(glm::mat4(1.0f), v3PlayerPosition);
-        glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
-        Cube.Draw(Camera);
-
+        m_Player.Draw(Camera);
+        
         Light.Draw(Camera);
 
         //Check and call events and swap the buffers
