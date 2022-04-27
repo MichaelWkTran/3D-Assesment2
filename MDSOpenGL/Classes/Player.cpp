@@ -54,15 +54,10 @@ CPlayer::CPlayer()
         20, 22, 23
     };
 
-    CTexture Textures[]
-    {
-        CTexture("Textures/Planks.png", "Diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-        CTexture("Textures/PlanksSpecular.png", "Specular", 1, GL_RED, GL_UNSIGNED_BYTE)
-    };
-    std::vector<CTexture> vTextures(Textures, Textures + sizeof(Textures) / sizeof(CTexture));
-
-    m_Mesh.SetVerticies(vVertices); m_Mesh.SetIndicies(vIndices); m_Mesh.m_vTextures = vTextures;
-
+    m_Mesh.SetVerticies(vVertices); m_Mesh.SetIndicies(vIndices); 
+    m_Mesh.m_vTextures.push_back(CTextureManager::Insert("Resources/Textures/Planks.png", "Diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE));
+    m_Mesh.m_vTextures.push_back(CTextureManager::Insert("Resources/Textures/PlanksSpecular.png", "Specular", 1, GL_RED, GL_UNSIGNED_BYTE));
+    
     m_bUpdateTransform = false;
     m_mat4Model = glm::mat4x4(1);
     m_v3Position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -70,10 +65,10 @@ CPlayer::CPlayer()
     m_v3Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
-CShader* CPlayer::GetShader() const { return m_Mesh.m_pShader; } void CPlayer::SetShader(CShader& _Shader) { m_Mesh.m_pShader = &_Shader; };
-glm::vec3 CPlayer::GetPosition() const { return m_v3Position; } void CPlayer::SetPosition(const glm::vec3 _v3Position) { m_v3Position = _v3Position; m_bUpdateTransform = true; }
-glm::quat CPlayer::GetRotation() const { return m_fquatRotation; } void CPlayer::SetRotation(const glm::quat _fquatRotation) { m_fquatRotation = _fquatRotation; m_bUpdateTransform = true; }
-glm::vec3 CPlayer::GetScale() const { return m_v3Scale; } void CPlayer::SetScale(const glm::vec3 _v3Scale) { m_v3Scale = _v3Scale; m_bUpdateTransform = true; }
+CShader* CPlayer::GetShader() const { return m_Mesh.m_pShader; }   /**/  void CPlayer::SetShader(CShader* _Shader) { m_Mesh.m_pShader = _Shader; };
+glm::vec3 CPlayer::GetPosition() const { return m_v3Position; }    /**/  void CPlayer::SetPosition(const glm::vec3 _v3Position) { m_v3Position = _v3Position; m_bUpdateTransform = true; }
+glm::quat CPlayer::GetRotation() const { return m_fquatRotation; } /**/  void CPlayer::SetRotation(const glm::quat _fquatRotation) { m_fquatRotation = _fquatRotation; m_bUpdateTransform = true; }
+glm::vec3 CPlayer::GetScale() const { return m_v3Scale; }          /**/  void CPlayer::SetScale(const glm::vec3 _v3Scale) { m_v3Scale = _v3Scale; m_bUpdateTransform = true; }
 
 void CPlayer::Input(GLFWwindow* _pWindow)
 {

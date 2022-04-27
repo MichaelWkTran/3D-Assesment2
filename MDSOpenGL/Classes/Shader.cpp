@@ -1,4 +1,11 @@
 #include "Shader.h"
+//#include <GLEW/glew.h>
+//#include <GLFW/glfw3.h>
+//#include <string>
+//#include <fstream>
+//#include <sstream>
+//#include <iostream>
+//#include <cerrno>
 
 /*static */std::string CShader::GetFileContents(const char* _pFileName)
 {
@@ -16,35 +23,49 @@
 	throw errno;
 }
 
-CShader::CShader(const char* _pVertexFile, const char* _pFragmentFile)
+CShader::CShader(const char* _pVertexFile, const char* _pFragmentFile, const char* _pGeometryFile/* = ""*/)
 {
-	std::string strVertexCode = GetFileContents(_pVertexFile);
-	std::string strFragmentCode = GetFileContents(_pFragmentFile);
-
-	const char* pVertexSource = strVertexCode.c_str();
-	const char* pFragmentSource = strFragmentCode.c_str();
-
 	//Set up Shaders
+	std::string strVertexCode = GetFileContents(_pVertexFile); const char* pVertexSource = strVertexCode.c_str();
 	GLuint GLuVertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(GLuVertexShader, 1, &pVertexSource, NULL);
 	glCompileShader(GLuVertexShader);
 	CompileErrors(GLuVertexShader, "VERTEX");
 
+	std::string strFragmentCode = GetFileContents(_pFragmentFile); const char* pFragmentSource = strFragmentCode.c_str();
 	GLuint GLuFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(GLuFragmentShader, 1, &pFragmentSource, NULL);
 	glCompileShader(GLuFragmentShader);
 	CompileErrors(GLuFragmentShader, "FRAGMENT");
 
+	GLuint GLuGeometryShader = 0;
+	if (_pGeometryFile == "")
+	{
+		m_UsesGeometryShader = false;
+	}
+	else
+	{
+		m_UsesGeometryShader = true;
+		std::string strGeometryCode = GetFileContents(_pGeometryFile); const char* pGeometrySource = strGeometryCode.c_str();
+		GLuGeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(GLuGeometryShader, 1, &pGeometrySource, NULL);
+		glCompileShader(GLuGeometryShader);
+		CompileErrors(GLuGeometryShader, "GEOMETRY");
+	}
+
+	//Create and link to Program
 	m_GLuID = glCreateProgram();
 
 	glAttachShader(m_GLuID, GLuVertexShader);
 	glAttachShader(m_GLuID, GLuFragmentShader);
+	if (m_UsesGeometryShader) glAttachShader(m_GLuID, GLuGeometryShader);
 
 	glLinkProgram(m_GLuID);
 	CompileErrors(m_GLuID, "PROGRAM");
 
 	glDeleteShader(GLuVertexShader);
 	glDeleteShader(GLuFragmentShader);
+	if (m_UsesGeometryShader) glDeleteShader(GLuGeometryShader);
 }
 
 CShader::~CShader()

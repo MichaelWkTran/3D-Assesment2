@@ -2,6 +2,7 @@
 
 #include <string>
 #include "VertexArray.h"
+#include "VertexBuffer.h"
 #include "ElementBuffer.h"
 #include "Camera.h"
 #include "Texture.h"
@@ -10,18 +11,18 @@ class CMesh
 {
 protected:
 	CVertexArray m_VertexArray;
-	std::vector <stVertex> m_vVerticies;
-	std::vector <GLuint> m_vIndicies;
-	
+	CElementBuffer m_ElementBuffer;
+	CVertexBuffer m_VertexBuffer;
+
 	bool m_bUpdateVertexArray;
 	virtual void UpdateVertexArray();
 
 public:
-	std::vector <CTexture> m_vTextures;
+	std::vector <CTexture*> m_vTextures;
 	CShader* m_pShader;
 
 	CMesh();
-	CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector <CTexture>& _Textures, CShader& _Shader);
+	CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies, std::vector<CTexture*>& _Textures, CShader* _Shader);
 
 	std::vector <stVertex> GetVerticies() const;
 	void SetVerticies(std::vector<stVertex>& _vVerticies);
@@ -48,5 +49,5 @@ protected:
 	virtual void UpdateVertexArray();
 
 public:
-	CMeshTris(std::vector<glm::vec3>& _vVertexPositions, std::vector<stTriangle>& _vTriangles, std::vector <CTexture>& _vTextures, CShader& _Shader);
+	CMeshTris(std::vector<glm::vec3>& _vVertexPositions, std::vector<stTriangle>& _vTriangles, std::vector <CTexture*>& _vTextures, CShader& _Shader);
 };

@@ -1,11 +1,14 @@
 #include "ElementBuffer.h"
 
+CElementBuffer::CElementBuffer()
+{
+    glGenBuffers(1, &m_GLuID);
+}
+
 CElementBuffer::CElementBuffer(std::vector<GLuint>& _GLuIndicies)
 {
     glGenBuffers(1, &m_GLuID);
-    Bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _GLuIndicies.size() * sizeof(GLuint), _GLuIndicies.data(), GL_STATIC_DRAW);
-    Unbind();
+    SetIndicies(_GLuIndicies);
 }
 
 CElementBuffer::~CElementBuffer()
@@ -16,6 +19,20 @@ CElementBuffer::~CElementBuffer()
 const GLuint CElementBuffer::GetID()
 {
     return m_GLuID;
+}
+
+std::vector<GLuint> CElementBuffer::GetIndicies() const
+{
+    return m_vIndicies;
+}
+
+void CElementBuffer::SetIndicies(std::vector<GLuint>& _vIndicies)
+{
+    m_vIndicies = _vIndicies;
+
+    Bind();
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _vIndicies.size() * sizeof(GLuint), _vIndicies.data(), GL_STATIC_DRAW);
+    Unbind();
 }
 
 void CElementBuffer::Bind()

@@ -15,7 +15,7 @@ private:
 public:
 	CPlayer();
 	
-	CShader* GetShader() const; void SetShader(CShader& _Shader);
+	CShader* GetShader() const; void SetShader(CShader* _Shader);
 	glm::vec3 GetPosition() const; void SetPosition(const glm::vec3 _v3Position);
 	glm::fquat GetRotation() const; void SetRotation(const glm::fquat _fquatRotation);
 	glm::vec3 GetScale() const; void SetScale(const glm::vec3 _v3Scale);

@@ -1,6 +1,7 @@
 #pragma once
 #include "GlobalVariables.h"
-//#include <GLFW/glfw3.h>
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
 
 //Window
 extern unsigned int uViewPortW = 800, uViewPortH = 800;
