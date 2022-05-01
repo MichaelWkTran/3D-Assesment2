@@ -31,7 +31,7 @@ CMesh::CMesh(std::vector<stVertex>& _vVerticies, std::vector<GLuint>& _vIndicies
 	m_bUpdateVertexArray = true;
 }
 
-std::vector<stVertex> CMesh::GetVerticies() const
+const std::vector<stVertex>& CMesh::GetVerticies() const
 {
 	return m_VertexBuffer.GetVertices();
 }
@@ -42,7 +42,7 @@ void CMesh::SetVerticies(std::vector<stVertex>& _vVerticies)
 	m_bUpdateVertexArray = true;
 }
 
-std::vector<GLuint> CMesh::GetIndicies() const
+const std::vector<GLuint>& CMesh::GetIndicies() const
 {
 	return m_ElementBuffer.GetIndicies();
 }

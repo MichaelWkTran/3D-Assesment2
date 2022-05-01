@@ -1,5 +1,28 @@
 #include "TextLabel.h"
 
+void CTextLabel::UpdateSize()
+{
+	m_v2Size = glm::vec2();
+	
+	if (m_strText.empty()) return void();
+	
+	if (m_uHAlign != 0 || m_uVAlign < 2)
+	{
+		for (std::string::const_iterator TextCharacter = m_strText.begin(); TextCharacter != m_strText.end(); TextCharacter++)
+		{
+			stFontChar FontCharacter = m_mapCharacter[*TextCharacter];
+			m_v2Size.x += FontCharacter.GLuAdvance;
+
+			m_v2Size.y += (float)FontCharacter.v2iBearing.y;
+		}
+
+		m_v2Size.y /= (float)m_strText.size();
+
+		m_v2Size.x *= m_v2Scale.x;
+		m_v2Size.y *= m_v2Scale.y;
+	}
+}
+
 CTextLabel::CTextLabel
 (
 	std::string _strText,
@@ -79,8 +102,10 @@ CTextLabel::CTextLabel
 	FT_Done_Face(FontFace);
 	FT_Done_FreeType(FontLibrary);
 
+	//Update m_v2Size
+	UpdateSize();
+
 	//Configure the VAO and VBO for texture quads
-	glGenBuffers(1, &VBODynamicQuad);
 	std::vector<GLuint> vIndices =
 	{
 		0, 3, 1,
@@ -88,14 +113,19 @@ CTextLabel::CTextLabel
 	};
 	m_ElementBuffer.SetIndicies(vIndices);
 
-	m_VertexArray.Bind(); glBindBuffer(GL_ARRAY_BUFFER, VBODynamicQuad); m_ElementBuffer.Bind();
+	m_VertexArray.Bind(); m_VertexBuffer.Bind(); m_ElementBuffer.Bind();
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * 4, NULL, GL_DYNAMIC_DRAW);
 	
 	m_VertexArray.LinkAttribute(0, 4, GL_FLOAT, 4 * sizeof(GLfloat), (void*)0);
 	
-	glBindBuffer(GL_ARRAY_BUFFER, 0); m_VertexArray.Unbind(); m_ElementBuffer.Unbind();
+	m_VertexBuffer.Unbind(); m_VertexArray.Unbind(); m_ElementBuffer.Unbind();
 
 	m_bInitialized = true;
+}
+
+const glm::mat4& CTextLabel::GetProjectionMatrix()
+{
+	return m_mat4Projection;
 }
 
 void CTextLabel::Draw()
@@ -112,23 +142,8 @@ void CTextLabel::Draw()
 	glUniform3fv(glGetUniformLocation(m_pShader->GetID(), "uni_v3Color"), 1, glm::value_ptr(m_v3Colour));
 	glUniformMatrix4fv(glGetUniformLocation(m_pShader->GetID(), "uni_mat4Projection"), 1, GL_FALSE, glm::value_ptr(m_mat4Projection));
 
-	// Iterate through the text characters and draw them
-	m_v2Size = glm::vec2();
-	if (m_uHAlign != 0 || m_uVAlign < 2)
-	{
-		for (std::string::const_iterator TextCharacter = m_strText.begin(); TextCharacter != m_strText.end(); TextCharacter++)
-		{
-			stFontChar FontCharacter = m_mapCharacter[*TextCharacter];
-			m_v2Size.x += FontCharacter.GLuAdvance;
-
-			m_v2Size.y += (float)FontCharacter.v2iBearing.y;
-		}
-
-		m_v2Size.y /= (float)m_strText.size();
-
-		m_v2Size.x *= m_v2Scale.x;
-		m_v2Size.y *= m_v2Scale.y;
-	}
+	// Update text width and height
+	UpdateSize();
 	
 	// Store Character Origin that can change as we write each character. Keep the starting text position intact.
 	glm::vec2 v2CharacterOrigin = m_v2Position; 
@@ -180,14 +195,9 @@ void CTextLabel::Draw()
 			{ GLfPosX,            GLfPosY,             0.0, 1.0 },
 			{ GLfPosX + GLfWidth, GLfPosY,             1.0, 1.0 }
 		};
-		GLuint GLuIndices[6] =
-		{
-			0, 3, 1,
-			0, 2, 3
-		};
 		
 		// Reload the vertex array to the VB0
-		glBindBuffer(GL_ARRAY_BUFFER, VBODynamicQuad);
+		m_VertexBuffer.Bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLuVertices), GLuVertices);
 
 		// Render the glyph texture over the quad
@@ -199,6 +209,6 @@ void CTextLabel::Draw()
 		v2CharacterOrigin.x += FontCharacter.GLuAdvance * m_v2Scale.x;
 	}
 	
-	glBindBuffer(GL_ARRAY_BUFFER, 0); m_VertexArray.Unbind(); glBindTexture(GL_TEXTURE_2D, 0); m_pShader->Deactivate();
+	m_VertexBuffer.Unbind(); m_VertexArray.Unbind(); CTextureManager::Unbind(); m_pShader->Deactivate();
 	glDisable(GL_BLEND);
 }

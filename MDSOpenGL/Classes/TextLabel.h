@@ -14,7 +14,7 @@
 #include "VertexBuffer.h"
 #include "ElementBuffer.h"
 #include "Texture.h"
-#include "../GlobalVariables.h"
+#include "../ExternVariables.h"
 
 class CTextLabel
 {
@@ -33,9 +33,10 @@ private:
 	std::map<GLchar, stFontChar> m_mapCharacter;
 
 	CVertexArray m_VertexArray;
-	GLuint VBODynamicQuad;
 	CVertexBuffer m_VertexBuffer;
 	CElementBuffer m_ElementBuffer;
+
+	void UpdateSize();
 
 public:
 	std::string m_strText;
@@ -47,7 +48,6 @@ public:
 	glm::vec3 m_v3Colour;
 	CShader* m_pShader;
 	
-
 	CTextLabel
 	(
 		std::string _strText,
@@ -57,5 +57,6 @@ public:
 		glm::vec2 _v2Position
 	);
 
+	const glm::mat4& GetProjectionMatrix();
 	void Draw();
 };

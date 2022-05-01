@@ -1,11 +1,29 @@
 #include "Shader.h"
-//#include <GLEW/glew.h>
-//#include <GLFW/glfw3.h>
-//#include <string>
-//#include <fstream>
-//#include <sstream>
-//#include <iostream>
-//#include <cerrno>
+
+void CShader::CompileErrors(unsigned int _uShader, const char* _pType)
+{
+	GLint GLiHasCompiled;
+	char cInfoLog[1024];
+
+	if (_pType != "PROGRAM")
+	{
+		glGetShaderiv(_uShader, GL_COMPILE_STATUS, &GLiHasCompiled);
+		if (GLiHasCompiled == GL_FALSE)
+		{
+			glGetShaderInfoLog(_uShader, 1024, NULL, cInfoLog);
+			std::cout << "SHADER_COMPILATION_ERROR for:" << _pType << "\n" << cInfoLog << std::endl;
+		}
+	}
+	else
+	{
+		glGetProgramiv(_uShader, GL_LINK_STATUS, &GLiHasCompiled);
+		if (GLiHasCompiled == GL_FALSE)
+		{
+			glGetProgramInfoLog(_uShader, 1024, NULL, cInfoLog);
+			std::cout << "SHADER_LINKING_ERROR for:" << _pType << "\n" << cInfoLog << std::endl;
+		}
+	}
+}
 
 /*static */std::string CShader::GetFileContents(const char* _pFileName)
 {
@@ -41,11 +59,11 @@ CShader::CShader(const char* _pVertexFile, const char* _pFragmentFile, const cha
 	GLuint GLuGeometryShader = 0;
 	if (_pGeometryFile == "")
 	{
-		m_UsesGeometryShader = false;
+		m_bUsesGeometryShader = false;
 	}
 	else
 	{
-		m_UsesGeometryShader = true;
+		m_bUsesGeometryShader = true;
 		std::string strGeometryCode = GetFileContents(_pGeometryFile); const char* pGeometrySource = strGeometryCode.c_str();
 		GLuGeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
 		glShaderSource(GLuGeometryShader, 1, &pGeometrySource, NULL);
@@ -58,14 +76,14 @@ CShader::CShader(const char* _pVertexFile, const char* _pFragmentFile, const cha
 
 	glAttachShader(m_GLuID, GLuVertexShader);
 	glAttachShader(m_GLuID, GLuFragmentShader);
-	if (m_UsesGeometryShader) glAttachShader(m_GLuID, GLuGeometryShader);
+	if (m_bUsesGeometryShader) glAttachShader(m_GLuID, GLuGeometryShader);
 
 	glLinkProgram(m_GLuID);
 	CompileErrors(m_GLuID, "PROGRAM");
 
 	glDeleteShader(GLuVertexShader);
 	glDeleteShader(GLuFragmentShader);
-	if (m_UsesGeometryShader) glDeleteShader(GLuGeometryShader);
+	if (m_bUsesGeometryShader) glDeleteShader(GLuGeometryShader);
 }
 
 CShader::~CShader()
@@ -91,32 +109,7 @@ void CShader::Deactivate()
 	glUseProgram(0);
 }
 
-GLuint CShader::GetID()
+const GLuint& CShader::GetID()
 {
 	return m_GLuID;
-}
-
-void CShader::CompileErrors(unsigned int _uShader, const char* _pType)
-{
-	GLint GLiHasCompiled;
-	char cInfoLog[1024];
-
-	if (_pType != "PROGRAM")
-	{
-		glGetShaderiv(_uShader, GL_COMPILE_STATUS, &GLiHasCompiled);
-		if (GLiHasCompiled == GL_FALSE)
-		{
-			glGetShaderInfoLog(_uShader, 1024, NULL, cInfoLog);
-			std::cout << "SHADER_COMPILATION_ERROR for:" << _pType << "\n" << cInfoLog << std::endl;
-		}
-	}
-	else
-	{
-		glGetProgramiv(_uShader, GL_LINK_STATUS, &GLiHasCompiled);
-		if (GLiHasCompiled == GL_FALSE)
-		{
-			glGetProgramInfoLog(_uShader, 1024, NULL, cInfoLog);
-			std::cout << "SHADER_LINKING_ERROR for:" << _pType << "\n" << cInfoLog << std::endl;
-		}
-	}
 }

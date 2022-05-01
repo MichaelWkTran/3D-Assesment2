@@ -1,9 +1,9 @@
 #include "Player.h"
-#include "../GlobalVariables.h"
+#include "../ExternVariables.h"
 
 CPlayer::CPlayer()
 {
-    const float fMeshSize = 0.5f;
+    const float fMeshSize = 0.15f;
     std::vector<stVertex> vVertices =
     {
         //Coordinates                                      Normals                       Texture Cordinate
@@ -65,21 +65,22 @@ CPlayer::CPlayer()
     m_v3Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
-CShader* CPlayer::GetShader() const { return m_Mesh.m_pShader; }   /**/  void CPlayer::SetShader(CShader* _Shader) { m_Mesh.m_pShader = _Shader; };
-glm::vec3 CPlayer::GetPosition() const { return m_v3Position; }    /**/  void CPlayer::SetPosition(const glm::vec3 _v3Position) { m_v3Position = _v3Position; m_bUpdateTransform = true; }
-glm::quat CPlayer::GetRotation() const { return m_fquatRotation; } /**/  void CPlayer::SetRotation(const glm::quat _fquatRotation) { m_fquatRotation = _fquatRotation; m_bUpdateTransform = true; }
-glm::vec3 CPlayer::GetScale() const { return m_v3Scale; }          /**/  void CPlayer::SetScale(const glm::vec3 _v3Scale) { m_v3Scale = _v3Scale; m_bUpdateTransform = true; }
+const CShader* CPlayer::GetShader() const { return m_Mesh.m_pShader; }   /**/ void CPlayer::SetShader(CShader* _Shader) { m_Mesh.m_pShader = _Shader; };
+const glm::vec3& CPlayer::GetPosition() const { return m_v3Position; }    /**/ void CPlayer::SetPosition(const glm::vec3 _v3Position) { m_v3Position = _v3Position; m_bUpdateTransform = true; }
+const glm::quat& CPlayer::GetRotation() const { return m_fquatRotation; } /**/ void CPlayer::SetRotation(const glm::quat _fquatRotation) { m_fquatRotation = _fquatRotation; m_bUpdateTransform = true; }
+const glm::vec3& CPlayer::GetScale() const { return m_v3Scale; }          /**/ void CPlayer::SetScale(const glm::vec3 _v3Scale) { m_v3Scale = _v3Scale; m_bUpdateTransform = true; }
 
 void CPlayer::Input(GLFWwindow* _pWindow)
 {
-    float m_fSpeed = 1.0f * fDeltatime;
-    
-    if (glfwGetKey(_pWindow, GLFW_KEY_W) == GLFW_PRESS) { SetPosition(GetPosition() + glm::vec3(0.0f, 0.0f, m_fSpeed)); }
-    if (glfwGetKey(_pWindow, GLFW_KEY_S) == GLFW_PRESS) { SetPosition(GetPosition() - glm::vec3(0.0f, 0.0f, m_fSpeed)); }
-    if (glfwGetKey(_pWindow, GLFW_KEY_A) == GLFW_PRESS) { SetPosition(GetPosition() + glm::vec3(m_fSpeed, 0.0f, 0.0f)); }
-    if (glfwGetKey(_pWindow, GLFW_KEY_D) == GLFW_PRESS) { SetPosition(GetPosition() - glm::vec3(m_fSpeed, 0.0f, 0.0f)); }
-    if (glfwGetKey(_pWindow, GLFW_KEY_Q) == GLFW_PRESS) { SetPosition(GetPosition() + glm::vec3(0.0f, m_fSpeed, 0.0f)); }
-    if (glfwGetKey(_pWindow, GLFW_KEY_E) == GLFW_PRESS) { SetPosition(GetPosition() - glm::vec3(0.0f, m_fSpeed, 0.0f)); }
+    glm::vec3 v3MovementInput
+    (
+        (glfwGetKey(_pWindow, GLFW_KEY_A) == GLFW_PRESS) - (glfwGetKey(_pWindow, GLFW_KEY_D) == GLFW_PRESS),
+        (glfwGetKey(_pWindow, GLFW_KEY_Q) == GLFW_PRESS) - (glfwGetKey(_pWindow, GLFW_KEY_E) == GLFW_PRESS),
+        (glfwGetKey(_pWindow, GLFW_KEY_W) == GLFW_PRESS) - (glfwGetKey(_pWindow, GLFW_KEY_S) == GLFW_PRESS)
+    );
+    if (v3MovementInput == glm::vec3()) return void();
+
+    SetPosition(GetPosition() + (v3MovementInput * fDeltatime));
 }
 
 void CPlayer::Draw(CCamera& _Camera)

@@ -16,12 +16,12 @@ CElementBuffer::~CElementBuffer()
     glDeleteBuffers(1, &m_GLuID);
 }
 
-const GLuint CElementBuffer::GetID()
+const GLuint& CElementBuffer::GetID()
 {
     return m_GLuID;
 }
 
-std::vector<GLuint> CElementBuffer::GetIndicies() const
+const std::vector<GLuint>& CElementBuffer::GetIndicies() const
 {
     return m_vIndicies;
 }

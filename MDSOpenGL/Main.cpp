@@ -1,9 +1,7 @@
 #include "Classes/Mesh.h"
 #include "Classes/Player.h"
 #include "Classes/TextLabel.h"
-#include "GlobalVariables.h"
-
-void FramebufferSizeCallback(GLFWwindow* _pWindow, int _iWidth, int _iHeight);
+#include "ExternVariables.h"
 
 int main()
 {
@@ -37,7 +35,7 @@ int main()
     
     //Setup Window Viewport
     glViewport(0, 0, uViewPortW, uViewPortH);
-    glfwSetFramebufferSizeCallback(pWindow, FramebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(pWindow, [](GLFWwindow* _pWindow, int _iWidth, int _iHeight) {glViewport(0,0,_iWidth,_iHeight); });
 
     //Program Variables
     bool bWireframe = false;
@@ -92,7 +90,7 @@ int main()
     CShader ShaderCube("Resources/Shaders/Default.vert", "Resources/Shaders/Default.frag"); ShaderCube.Activate();
     CMesh Cube;
     {
-        const float fMeshSize = 0.25f;
+        const float fMeshSize = 0.1f;
         std::vector<stVertex> vVertices =
         {
             //Coordinates                                      Normals                       Texture Cordinate
@@ -150,8 +148,8 @@ int main()
     }
 
     float mat4CubeRotation = 0;
-    glm::mat4 mat4CubePosition  = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.25f));
-    glm::mat4 mat4CubePosition2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));
+    glm::mat4 mat4CubePosition  = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.6f));
+    glm::mat4 mat4CubePosition2 = glm::translate(glm::mat4(1.0f), glm::vec3(0.6f, 0.0f, 0.0f));
     glm::mat4 mat4CubeModel = mat4CubePosition;
 
     glUniform4f(glGetUniformLocation(ShaderCube.GetID(), "uni_v4LightColor"), v4LightColour.x, v4LightColour.y, v4LightColour.z, v4LightColour.w);
@@ -161,25 +159,36 @@ int main()
     CPlayer m_Player;
     m_Player.SetShader(&ShaderCube);
 
-    //Setup Bounce Text
+    //Setup Text Shader
     CShader ShaderText("Resources/Shaders/Text.vert", "Resources/Shaders/Text.frag");
-    CTextLabel TextLabelBounce("asdasd", "Resources/Fonts/ARIAL.ttf", &ShaderText, glm::ivec2(0, 48), glm::vec2(100.0f, 100.0f));
+
+    //Setup Bounce Text
+    CTextLabel TextLabelBounce("Bounce", "Resources/Fonts/ARIAL.ttf", &ShaderText, glm::ivec2(0, 48), glm::vec2(100.0f, 40.0f));
     TextLabelBounce.m_uHAlign = 1; TextLabelBounce.m_uVAlign = 1;
     float fTextScaleFactor = 0.0f;
     float fTextScale = 1.0f;
 
     //Setup Scroll Text
-    CShader ShaderTextScroll("Resources/Shaders/TextScroll.vert", "Resources/Shaders/TextScroll.frag", "Resources/Shaders/TextScroll.geo");
-    CTextLabel TextLabelScroll("asdasd", "Resources/Fonts/ARIAL.ttf", &ShaderTextScroll, glm::ivec2(0, 48), glm::vec2(200.0f, 100.0f));
+    CShader ShaderTextScroll("Resources/Shaders/TextScroll.vert", "Resources/Shaders/TextScroll.frag", "Resources/Shaders/TextScroll.geo"); ShaderTextScroll.Activate();
+    CTextLabel TextLabelScroll("TheEndIsNot", "Resources/Fonts/ARIAL.ttf", &ShaderTextScroll, glm::ivec2(0, 48), glm::vec2(500.0f, 55.0f));
+    float fTextScroll = 0;
 
-    //glUniform1f(glGetUniformLocation(ShaderTextScroll.GetID(), "uni_fOffset"), v3LightPos.x);
     glUniform1f(glGetUniformLocation(ShaderTextScroll.GetID(), "uni_fRootXPosition"), TextLabelScroll.m_v2Position.x);
     glUniform1f(glGetUniformLocation(ShaderTextScroll.GetID(), "uni_fWidth"), TextLabelScroll.m_v2Size.x);
+
+    //Setup Statistic Text
+    CTextLabel TextMouseX("Mouse X: ", "Resources/Fonts/ARIAL.ttf", &ShaderText, glm::ivec2(0, 48), glm::vec2(10.0f, 780.0f)); TextMouseX.m_v2Scale = glm::vec2(0.5f, 0.5f);
+    CTextLabel TextMouseY("Mouse Y: ", "Resources/Fonts/ARIAL.ttf", &ShaderText, glm::ivec2(0, 48), glm::vec2(10.0f, 750.0f)); TextMouseY.m_v2Scale = glm::vec2(0.5f, 0.5f);
+
+    //Setup Username Text
+    CTextLabel TextUsername("Username", "Resources/Fonts/ARIAL.ttf", &ShaderText, glm::ivec2(0, 48), glm::vec2(10.0f, 710.0f));
 
     //Set up camera
     CCamera Camera(&uViewPortW, &uViewPortH, true, glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 
+    //Setup Input Callbacks
     glfwSetKeyCallback(pWindow, KeyFunction);
+    glfwSetMouseButtonCallback(pWindow, MouseButtonFunction);
 
     //Render Loop
     while (!glfwWindowShouldClose(pWindow))
@@ -189,52 +198,146 @@ int main()
         fDeltatime = fCurrentTimestep - fPreviousTimestep;
         fPreviousTimestep = fCurrentTimestep;
         
-        if (bKeyPressed == false && iAction != GLFW_RELEASE)
+        //Inputs
         {
-            switch (iKey)
+            UpdateMousePosition(pWindow);
+
+            if (!bKeyPressed && iKeyAction != GLFW_RELEASE)
             {
-            case GLFW_KEY_ESCAPE:
-                glfwSetWindowShouldClose(pWindow, true);
-                break;
-            case GLFW_KEY_X:
-                bWireframe = !bWireframe;
-                if (bWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                break;
-            case GLFW_KEY_C:
-                bCursorVisible = !bCursorVisible;
-                if (bCursorVisible) glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL); else glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-                break;
+                switch (iKey)
+                {
+                    //Close Window
+                case GLFW_KEY_ESCAPE:
+                    glfwSetWindowShouldClose(pWindow, true);
+                    break;
+                    //Toggle Text Input
+                case GLFW_KEY_ENTER:
+                    bTextInputEnabled = !bTextInputEnabled;
+                    break;
+                }
             }
+
+            if (!bTextInputEnabled)
+            {
+                if (!bKeyPressed && iKeyAction != GLFW_RELEASE)
+                {
+                    switch (iKey)
+                    {
+                        //Toggle wireframe
+                    case GLFW_KEY_X:
+                        bWireframe = !bWireframe;
+                        if (bWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        break;
+                        //Enable Cursor
+                    case GLFW_KEY_C:
+                        bCursorVisible = !bCursorVisible;
+                        if (bCursorVisible) glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL); else glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+                        break;
+                    }
+                }
+
+                m_Player.Input(pWindow);
+
+                glfwSetCharCallback(pWindow, 0);
+            }
+            else
+            {
+                glfwSetCharCallback(pWindow, TextInput);
+
+                //Type Username
+                if (!bKeyPressed && iKeyAction != GLFW_RELEASE)
+                {
+                    //If the charCodePoint is valid
+                    if ((charCodePoint >= 32 && charCodePoint <= 126))
+                    {
+                        //Type Characters
+                        if (TextUsername.m_strText.size() < 20U && bCodePointFound)
+                        {
+                            TextUsername.m_strText += charCodePoint;
+                        }
+
+                        //Delete Last character
+                        if (iKey == GLFW_KEY_BACKSPACE && !TextUsername.m_strText.empty())
+                        {
+                            TextUsername.m_strText.pop_back();
+                        }
+                    }
+                }
+            }
+
+            UpdateInputPressed();
         }
 
-        Camera.Update();
-        m_Player.Input(pWindow);
-        UpdateKeyPressed();
-
         //Rendering
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        if (bTextInputEnabled) glClearColor(1.0f, 0.3f, 0.3f, 1.0f); else { glClearColor(0.2f, 0.3f, 0.3f, 1.0f); }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ShaderCube.Activate();
-        mat4CubeModel = glm::rotate(mat4CubePosition, glm::radians(mat4CubeRotation += fDeltatime * 90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::inverse(mat4CubePosition);
-        glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
-        Cube.Draw(Camera);
+        {
+            ShaderCube.Activate();
+            mat4CubeModel = glm::rotate(glm::mat4(1), glm::radians(mat4CubeRotation += fDeltatime * 90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * mat4CubePosition;
+            glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+            Cube.Draw(Camera);
+        }
         
-        mat4CubeModel = glm::rotate(mat4CubePosition2, glm::radians(mat4CubeRotation), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::inverse(mat4CubePosition2);
-        glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
-        Cube.Draw(Camera);
+        {
+            mat4CubeModel = glm::rotate(glm::mat4(1), glm::radians(mat4CubeRotation + 180.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * mat4CubePosition2;
+            glUniformMatrix4fv(glGetUniformLocation(ShaderCube.GetID(), "uni_mat4Model"), 1, GL_FALSE, glm::value_ptr(mat4CubeModel));
+            Cube.Draw(Camera);
+        }
 
         m_Player.Draw(Camera);
         
-        fTextScaleFactor += fDeltatime * 45.0f;
-        while (fTextScaleFactor > 360.0f) { fTextScaleFactor -= 360.0f; }
-        TextLabelBounce.m_v2Scale = glm::vec2(1.0f, 1.0f) * (sinf(glm::radians(fTextScaleFactor)) / 2.0f) + fTextScale;
-        TextLabelBounce.Draw();
+        {
+            fTextScaleFactor += fDeltatime * 45.0f;
+            while (fTextScaleFactor > 360.0f) { fTextScaleFactor -= 360.0f; }
+            TextLabelBounce.m_v2Scale = glm::vec2(1.0f, 1.0f) * (sinf(glm::radians(fTextScaleFactor)) / 2.0f) + fTextScale;
+            TextLabelBounce.Draw();
+        }
+        
+        {
+            ShaderTextScroll.Activate();
+            fTextScroll -= fDeltatime * 50.0f;
+            if (fTextScroll < 0.0f) { fTextScroll = TextLabelScroll.m_v2Size.x; }
+            glUniform1f(glGetUniformLocation(ShaderTextScroll.GetID(), "uni_fScroll"), fTextScroll);
+            TextLabelScroll.Draw();
+        }
+        
+        {
+            TextMouseX.m_strText = "Mouse X: " + std::to_string(v2MousePosition.x);
+            TextMouseY.m_strText = "Mouse Y: " + std::to_string(v2MousePosition.y);
+            TextMouseX.Draw();
+            TextMouseY.Draw();
+        }
 
-        ShaderTextScroll.Activate();
-        glUniform1f(glGetUniformLocation(ShaderTextScroll.GetID(), "uni_fWidth"), TextLabelScroll.m_v2Size.x);
-        glUniform1f(glGetUniformLocation(ShaderTextScroll.GetID(), "uni_fScroll"), 0.0f);
-        TextLabelScroll.Draw();
+        {
+            glm::vec4 v4ProjMousePos = TextUsername.GetProjectionMatrix() * glm::vec4(v2MousePosition.x, v2MousePosition.y, 0.0f, 1.0f);
+            
+            //Top left position of the text
+            glm::vec4 v4ProjUsernamePos1 = TextUsername.GetProjectionMatrix() * 
+                glm::vec4(TextUsername.m_v2Position.x, TextUsername.m_v2Position.y, 0.0f, 1.0f);
+            
+            //Bottom right position of the text
+            glm::vec4 v4ProjUsernamePos2 = TextUsername.GetProjectionMatrix() * 
+                glm::vec4(TextUsername.m_v2Position.x + TextUsername.m_v2Size.x, TextUsername.m_v2Position.y - TextUsername.m_v2Size.y, 0.0f, 1.0f);
+
+            //Chack colour of the username when hovering the mouse over it
+            if
+            (
+                v4ProjMousePos.x > v4ProjUsernamePos1.x &&
+                v4ProjMousePos.x < v4ProjUsernamePos2.x &&
+                -v4ProjMousePos.y < v4ProjUsernamePos1.y &&
+                -v4ProjMousePos.y > v4ProjUsernamePos2.y
+            )
+            {
+                TextUsername.m_v3Colour = glm::vec3(0.0f, 1.0f, 0.0f);
+            }
+            else
+            {
+                TextUsername.m_v3Colour = glm::vec3(1.0f, 1.0f, 1.0f);
+            }
+
+            TextUsername.Draw();
+        }
 
         Light.Draw(Camera);
 
@@ -246,9 +349,4 @@ int main()
     glfwDestroyWindow(pWindow);
     glfwTerminate();
     return 0;
-}
-
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
 }

@@ -15,10 +15,10 @@ private:
 public:
 	CPlayer();
 	
-	CShader* GetShader() const; void SetShader(CShader* _Shader);
-	glm::vec3 GetPosition() const; void SetPosition(const glm::vec3 _v3Position);
-	glm::fquat GetRotation() const; void SetRotation(const glm::fquat _fquatRotation);
-	glm::vec3 GetScale() const; void SetScale(const glm::vec3 _v3Scale);
+	const CShader* GetShader() const; void SetShader(CShader* _Shader);
+	const glm::vec3& GetPosition() const; void SetPosition(const glm::vec3 _v3Position);
+	const glm::fquat& GetRotation() const; void SetRotation(const glm::fquat _fquatRotation);
+	const glm::vec3& GetScale() const; void SetScale(const glm::vec3 _v3Scale);
 
 	void Input(GLFWwindow* _pWindow);
 	void Draw(CCamera& _Camera);

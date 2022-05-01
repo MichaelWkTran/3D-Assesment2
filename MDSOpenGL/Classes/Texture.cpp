@@ -1,9 +1,4 @@
 #include "Texture.h"
-//#include <GLEW/glew.h>
-//#include <GLFW/glfw3.h>
-//#include <stb/stb_image.h>
-//#include <map>
-//#include <iostream>
 
 /*static */std::map<GLuint, CTexture*> CTextureManager::mapTextures;
 

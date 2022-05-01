@@ -1,5 +1,4 @@
 #pragma once
-
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -21,7 +20,6 @@ private:
 	float m_fNearPlane, m_fFarPlane;
 
 	glm::mat4 m_mat4View, m_mat4Projection, m_mat4Camera;
-
 
 	void UpdateProjectionMatrix();
 
@@ -45,14 +43,12 @@ public:
 		float _fFarPlane = 100.0f
 	);
 
-	void Update();
-	void Inputs(GLFWwindow* _Window);
+	const glm::mat4& GetViewMatrix();
+	const glm::mat4& GetProjectionMatrix();
+	const glm::mat4& GetCameraMatrix();
+	const float GetFOV(bool _InRadians = false); void SetFOV(float _FOV, bool _IsRadians = false);
+	const float& GetNearPlane(); void SetNearPlane(float _fNearPlane);
+	const float& GetFarPlane(); void SetFarPlane(float _fFarPlane);
 
-	//Get Set Methods
-	glm::mat4 GetViewMatrix();
-	glm::mat4 GetProjectionMatrix();
-	glm::mat4 GetCameraMatrix();
-	float GetFOV(bool _InRadians = false); void SetFOV(float _FOV, bool _IsRadians = false);
-	float GetNearPlane(); void SetNearPlane(float _fNearPlane);
-	float GetFarPlane(); void SetFarPlane(float _fFarPlane);
+	void Update();
 };

@@ -17,7 +17,7 @@ void main()
 {
 	float fAlpha = texture(uni_samp2DTextTexture, m_v2TextureCoord).r;
 	
-	if (m_v2Position.x < uni_fRootXPosition || m_v2Position.x > uni_fRootXPosition + m_fOffset + m_fWidth + 150.0f) fAlpha = 0;
-	
+	if (m_v2Position.x < uni_fRootXPosition || m_v2Position.x > uni_fRootXPosition + m_fOffset + m_fWidth) fAlpha = 0;
+
 	FragColor = vec4(uni_v3Color, fAlpha); 
 }

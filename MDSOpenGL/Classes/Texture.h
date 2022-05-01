@@ -1,5 +1,4 @@
 #pragma once
-
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
@@ -39,6 +38,7 @@ private:
 
 	CTexture(const char* _pName, const char* _pType, GLuint&& _GLuSlot);
 	CTexture(CTexture const&) = delete;
+	CTexture& operator=(const CTexture&) = delete;
 	~CTexture();
 
 public:

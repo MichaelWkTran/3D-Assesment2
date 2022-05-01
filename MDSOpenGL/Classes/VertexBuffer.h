@@ -21,11 +21,12 @@ private:
 
 public:
 	CVertexBuffer();
+	CVertexBuffer(CVertexBuffer const&) = delete;
 	CVertexBuffer(std::vector<stVertex>& _vVerticies);
 	~CVertexBuffer();
 
-	const GLuint GetID();
-	std::vector<stVertex> GetVertices() const;
+	const GLuint& GetID();
+	const std::vector<stVertex>& GetVertices() const;
 	void SetVertices(std::vector<stVertex>& _vVertices);
 	void Bind();
 	void Unbind();

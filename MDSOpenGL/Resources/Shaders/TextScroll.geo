@@ -3,7 +3,6 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 8) out;
 
-in vec2 a_v2Position[];
 in vec2 a_v2TextureCoord[];
 
 out vec2 m_v2Position;
@@ -20,8 +19,10 @@ void main()
 	for (int i = 0; i < 4; i++)
 	{
 		gl_Position = uni_mat4Projection * gl_in[i].gl_Position;
-		m_v2Position = a_v2Position[i];
+		m_v2Position = gl_in[i].gl_Position.xy;
 		m_v2TextureCoord = a_v2TextureCoord[i];
+		m_fOffset = uni_fOffset;
+		m_fWidth = uni_fWidth;
 		EmitVertex();
 	}
 	
@@ -29,8 +30,8 @@ void main()
 
 	for (int i = 0; i < 4; i++)
 	{
-		gl_Position = uni_mat4Projection * (gl_in[i].gl_Position - vec4(uni_fWidth + uni_fOffset, 0.0f, 0.0f, 0.0f));
-		m_v2Position = a_v2Position[i];
+		m_v2Position = gl_in[i].gl_Position.xy - vec2(uni_fWidth + uni_fOffset, 0.0f);
+		gl_Position = uni_mat4Projection * vec4(m_v2Position.xy, gl_in[i].gl_Position.zw);
 		m_v2TextureCoord = a_v2TextureCoord[i];
 		m_fOffset = uni_fOffset;
 		m_fWidth = uni_fWidth;

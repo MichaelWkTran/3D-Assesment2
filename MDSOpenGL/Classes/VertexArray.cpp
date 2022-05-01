@@ -10,6 +10,11 @@ CVertexArray::~CVertexArray()
     glDeleteVertexArrays(1, &m_GLuID);
 }
 
+const GLuint& CVertexArray::GetID()
+{
+    return m_GLuID;
+}
+
 void CVertexArray::LinkAttribute
 (
     GLuint GluLayout,

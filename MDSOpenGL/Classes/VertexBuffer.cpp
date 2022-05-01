@@ -16,12 +16,12 @@ CVertexBuffer::~CVertexBuffer()
     glDeleteBuffers(1, &m_GLuID);
 }
 
-const GLuint CVertexBuffer::GetID()
+const GLuint& CVertexBuffer::GetID()
 {
     return m_GLuID;
 }
 
-std::vector<stVertex> CVertexBuffer::GetVertices() const
+const std::vector<stVertex>& CVertexBuffer::GetVertices() const
 {
     return m_vVertices;
 }

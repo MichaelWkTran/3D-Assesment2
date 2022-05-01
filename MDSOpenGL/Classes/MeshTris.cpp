@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "MeshTris.h"
 
 void CMeshTris::UpdateVertexArray()
 {
