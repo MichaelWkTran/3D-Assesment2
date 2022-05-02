@@ -21,7 +21,6 @@ vec4 DiffuseColour()
 	vec4 v4Colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	for (int iTextureNumber = 0; iTextureNumber < DIFFUSE_NUMBER; iTextureNumber++) v4Colour *= texture(uni_samp2DDiffuse[iTextureNumber], m_v2TextureCoord);
 
-	//return vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	return v4Colour;
 }
 
@@ -56,7 +55,7 @@ vec4 PointLight(float _fAmbient)
 vec4 DirectionalLight(float _fAmbient)
 {
 	vec3 v3Normal = normalize(m_v3Normal);
-	vec3 v3lightDirection = normalize(vec3(1.0f, 1.0f, 0.0f));
+	vec3 v3lightDirection = normalize(vec3(-1.0f, -1.0f, -1.0f));
 	float fDiffuse = max(dot(v3Normal, v3lightDirection), 0.0f);
 
 	vec3 v3ViewDirection = normalize(uni_v3CameraPosition - m_v3CurrentPosition);
@@ -84,12 +83,12 @@ vec4 SpotLight(float _fAmbient)
 	float fAngle = dot(vec3(0.0f, -1.0f, 0.0f), -v3lightDirection);
 	float fIntensity = clamp((fAngle - fOuterCone) / (fInnerCone - fOuterCone), 0.0f, 1.0f);
 
-	return (DiffuseColour() * vec4(m_v3Color, 1.0f) * uni_v4LightColor * ((fDiffuse  * fIntensity) + _fAmbient)) + (SpecularColour().r * fSpecular * fIntensity);
+	return (DiffuseColour() * vec4(m_v3Color, 1.0f) * uni_v4LightColor * ((fDiffuse * fIntensity) + _fAmbient)) + (SpecularColour().r * fSpecular * fIntensity);
 }
 
 void main()
 {
-	float fAmbient = 0.2f;
+	float fAmbient = 0.6f;
 
 	FragColor = PointLight(fAmbient);
 }

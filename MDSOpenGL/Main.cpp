@@ -48,14 +48,14 @@ int main()
         std::vector<stVertex> vVertices =
         {
             //Coordinates
-            stVertex{glm::vec3(1.0f,  -1.0f, -1.0f) * 0.1f},
-            stVertex{glm::vec3(-1.0f, -1.0f, -1.0f) * 0.1f},
-            stVertex{glm::vec3(1.0f,  -1.0f,  1.0f) * 0.1f},
-            stVertex{glm::vec3(-1.0f, -1.0f,  1.0f) * 0.1f},
-            stVertex{glm::vec3(1.0f,   1.0f, -1.0f) * 0.1f},
-            stVertex{glm::vec3(-1.0f,  1.0f, -1.0f) * 0.1f},
-            stVertex{glm::vec3(1.0f,   1.0f,  1.0f) * 0.1f},
-            stVertex{glm::vec3(-1.0f,  1.0f,  1.0f) * 0.1f}
+            stVertex{glm::vec3(1.0f,  -1.0f, -1.0f) * 0.025f},
+            stVertex{glm::vec3(-1.0f, -1.0f, -1.0f) * 0.025f},
+            stVertex{glm::vec3(1.0f,  -1.0f,  1.0f) * 0.025f},
+            stVertex{glm::vec3(-1.0f, -1.0f,  1.0f) * 0.025f},
+            stVertex{glm::vec3(1.0f,   1.0f, -1.0f) * 0.025f},
+            stVertex{glm::vec3(-1.0f,  1.0f, -1.0f) * 0.025f},
+            stVertex{glm::vec3(1.0f,   1.0f,  1.0f) * 0.025f},
+            stVertex{glm::vec3(-1.0f,  1.0f,  1.0f) * 0.025f}
         };
         std::vector<GLuint> vIndices =
         {
@@ -79,7 +79,7 @@ int main()
     }
 
     glm::vec4 v4LightColour(1.0f, 1.0f, 1.0f, 1.0f);
-    glm::vec3 v3LightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::vec3 v3LightPos = glm::vec3(0.0f, 0.4, 0.0f);
     glm::mat4 mat4LightModel = glm::mat4(1.0f);
     mat4LightModel = glm::translate(mat4LightModel, v3LightPos);
 

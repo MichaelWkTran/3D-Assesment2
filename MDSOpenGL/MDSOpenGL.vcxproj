@@ -72,12 +72,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\Include\FREETYPE;$(ProjectDir)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\User\Documents\GitHub\3D-Assesment2\MDSOpenGL\Include\FREETYPE;$(ProjectDir)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\User\Documents\GitHub\3D-Assesment2\MDSOpenGL\Include\FREETYPE;$(ProjectDir)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
